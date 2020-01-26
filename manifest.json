@@ -3,9 +3,9 @@
 	"name": "Initial Profile Setting",
 	"description": "Скрипт для первоначальной настройки профиля стим перед использованием ботов-трейдеров.",
 	"version": "0.0.1",
-	"permissions": ["https://steamcommunity.com/*", "https://*.steampowered.com/*", "https://market.csgo.com/*", "storage", "declarativeContent"],
+	"permissions": ["https://steamcommunity.com/*", "https://*.steampowered.com/*", "https://market.csgo.com/*", "storage", "tabs"],
 	"background": {
-		"scripts": ["scripts/background.js"],
+		"scripts": ["js/library.js", "js/background.js"],
 		"persistent": false
 	},
 	"browser_action": {
@@ -16,5 +16,9 @@
 	},
 	"icons": {
 		"128": "img/icon.png"
-	}
+	},
+	"content_scripts": [{
+		"matches": ["https://www.youtube.com/"],
+		"js": ["js/broadcasts.js"]
+	}]
 }

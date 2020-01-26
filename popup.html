@@ -1,15 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html style="width: 300px; height: 400px;">
 	<head>
-		<style>
-			button {
-				height: 30px;
-				width: 30px;
-				outline: none;
-			}
-		</style>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/style.css">
+		<link href="/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 	</head>
-	<body>
-		<button id="changeColor"></button>
+	<body class="grid">
+		<header class="grid">
+			<div class="header grid">
+				<div class="logo">
+
+				</div>
+				<div class="links grid">
+					<div class="group grid">
+						<a href="https://vk.com/tradeon" target="_blank" class="button">Группа</a>
+					</div>
+					<div class="site grid">
+						<a href="http://tradeon.store/" target="_blank" class="button">Сайт</a>
+					</div>
+				</div>
+			</div>
+			<div class="tabs grid">
+				<div class="grid">
+					<a href="popup.html" class="button">Настройка профиля</a>
+				</div>
+				<div class="grid">
+					<a href="trade.html" class="button">Прием входящих обменов</a>
+				</div>
+				<div class="grid">
+					<a href="info.html" class="button">Информация</a>
+				</div>
+			</div>
+		</header>
+		<article class="grid">
+			<div class="grid vertical2">
+				<p class="grid articletext">Полное оформление профиля и получение steamapi/tmapi/steamid/tradelink</p>
+				<div class="grid articlecontent">
+					<i class="grid far fa-question-circle fa-2x"></i>
+					<a href="" class="grid button indicator"></a>
+				</div>
+			</div>
+			<div class="grid vertical2">
+				<p class="grid articletext">Полное оформление профиля</p>
+				<div class="grid articlecontent">
+					<i class="far fa-question-circle fa-2x"></i>
+					<a href="" class="button indicator"></a>
+				</div>
+			</div>
+			<div class="grid vertical2">
+				<p class="grid articletext">Получение steamapi/tmapi/steamid/tradelink</p>
+				<div class="grid articlecontent">
+					<i class="far fa-question-circle fa-2x"></i>
+					<a href="" class="button indicator"></a>
+				</div>
+			</div>
+			<div class="grid vertical2">
+				<p class="grid articletext">Оформление по заданным настройкам</p>
+				<div class="grid articlecontent">
+					<i class="far fa-question-circle fa-2x"></i>
+					<a href="" class="button indicator"></a>
+				</div>
+			</div>
+			<div class="grid vertical2">
+				<p class="grid articletext">Ручная настройка оформления и получение данных</p>
+				<div class="grid articlecontentbutton">
+					<i class="far fa-question-circle fa-2x"></i>
+					<a href="settings.html" class="settingsbutton"><i class="fas fa-cog fa-3x"></i></a>
+				</div>
+			</div>
+		</article>
+		<footer class="grid">
+			<div class="ott grid">steam api key: <input type="text" readonly class="steamapi" value="oiwugh"></div>
+			<div class="ott grid">tm api key: <input type="text" readonly class="tmapi" value="98tyghdfoin"></div>
+			<div class="ott grid">steam id: <input type="text" readonly class="steamid" value="651489465415618435156"></div>
+			<div class="ott grid">treade link: <input type="text" readonly class="tradelink" value="chrome-extension://cbjlcnaajdlbddopaoaepmjkncdhjkdd/popup.html" id="test"></div>
+		</footer>
+		<script src="js/library.js"></script>
+		<script src="js/popup.js"></script>
 	</body>
 </html>
