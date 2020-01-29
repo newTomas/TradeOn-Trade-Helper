@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="css/style.css">
+		<script src="js/jquery-3.4.1.min.js"></script>
 		<link href="/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 	</head>
 	<body class="grid">
@@ -37,28 +38,28 @@
 				<p class="grid articletext">Полное оформление профиля и получение steamapi/tmapi/steamid/tradelink</p>
 				<div class="grid articlecontent">
 					<i class="grid far fa-question-circle fa-2x"></i>
-					<a href="" class="grid button indicator"></a>
+					<a href="#" id="fullstart" class="grid button indicator"></a>
 				</div>
 			</div>
 			<div class="grid vertical2">
 				<p class="grid articletext">Полное оформление профиля</p>
 				<div class="grid articlecontent">
 					<i class="far fa-question-circle fa-2x"></i>
-					<a href="" class="button indicator"></a>
+					<a href="#" id="decorstart" class="button indicator"></a>
 				</div>
 			</div>
 			<div class="grid vertical2">
 				<p class="grid articletext">Получение steamapi/tmapi/steamid/tradelink</p>
 				<div class="grid articlecontent">
 					<i class="far fa-question-circle fa-2x"></i>
-					<a href="" class="button indicator"></a>
+					<a href="#" id="gettinginfostart" class="button indicator"></a>
 				</div>
 			</div>
 			<div class="grid vertical2">
 				<p class="grid articletext">Оформление по заданным настройкам</p>
 				<div class="grid articlecontent">
 					<i class="far fa-question-circle fa-2x"></i>
-					<a href="" class="button indicator"></a>
+					<a href="#" id="customstart" class="button indicator"></a>
 				</div>
 			</div>
 			<div class="grid vertical2">
@@ -70,10 +71,10 @@
 			</div>
 		</article>
 		<footer class="grid">
-			<div class="ott grid">steam api key: <input type="text" readonly class="steamapi" value="oiwugh"></div>
-			<div class="ott grid">tm api key: <input type="text" readonly class="tmapi" value="98tyghdfoin"></div>
-			<div class="ott grid">steam id: <input type="text" readonly class="steamid" value="651489465415618435156"></div>
-			<div class="ott grid">treade link: <input type="text" readonly class="tradelink" value="chrome-extension://cbjlcnaajdlbddopaoaepmjkncdhjkdd/popup.html" id="test"></div>
+			<div class="ott grid">steam api key: <input type="text" readonly id="steamapi"></div>
+			<div class="ott grid">tm api key: <input type="text" readonly id="tmapi"></div>
+			<div class="ott grid">steam id: <input type="text" readonly id="steamid"></div>
+			<div class="ott grid">treade link: <input type="text" readonly id="tradelink"></div>
 		</footer>
 		<script src="js/library.js"></script>
 		<script src="js/popup.js"></script>
