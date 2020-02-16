@@ -6,7 +6,7 @@ function marketAuth()
 			step: 3,
 			marketStep: false
 		});
-		storage.get(["marketStep", "tradelink"], res =>{
+		storage.get(["tradelink"], res =>{
 			var csrf = jQuery('[name=csrf-token]').attr('content');
 			jQuery.ajax({
 				method: 'POST',
@@ -31,7 +31,6 @@ function marketAuth()
 							tmapi: jQuery(html).find('.col0:first').text()
 						});
 						chrome.runtime.sendMessage({action: "queue"});
-						window.close();
 					});
 			});
 		});

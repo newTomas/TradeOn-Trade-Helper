@@ -44,6 +44,34 @@ async function marketAuth(step)
 	}
 }
 
+async function checkprofile(step)
+{
+	storage.set({step: 1, checkprofile: true});
+	chrome.tabs.create({url: 'https://steamcommunity.com/'});
+}
+
+async function ViewBroadcast(step)
+{
+	if(step == 0)
+	{
+		storage.set({step: 1, broadcast: true});
+		chrome.tabs.create({url: topbroadcast}, (tab) => {
+			curtab = tab.id;
+		});
+	}
+}
+
+async function SubscribeToWorkshopItem(step)
+{
+	if(step == 0)
+	{
+		storage.set({step: 1, workshop: true});
+		chrome.tabs.create({url: top30workshop[Math.round(Math.random() * 29)]}, (tab) => {
+			curtab = tab.id;
+		});
+	}
+}
+
 async function getSteamApiSteamId1(tab)
 {
 	chrome.tabs.executeScript(tab.id, {

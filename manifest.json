@@ -24,5 +24,17 @@
 	{
 		"matches": ["https://market.csgo.com/"],
 		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/market.js"]
+	},
+	{
+		"matches": ["https://steamcommunity.com/"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/checkprofile.js"]
+	},
+	{
+		"matches": ["https://steamcommunity.com/broadcast/watch/*"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/broadcast.js"]
+	},
+	{
+		"matches": ["https://steamcommunity.com/sharedfiles/filedetails/?id=*"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/sharedfile.js"]
 	}]
 }
