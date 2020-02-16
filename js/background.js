@@ -1,20 +1,3 @@
-window.modes = [
-	[
-
-	],
-	[
-		checkprofile
-	],
-	[
-		getSteamApiSteamId,
-		getTradeLink,
-		marketAuth
-	]
-];
-
-
-
-window.modes[0] = window.modes[1].concat(window.modes[2]);
 window.working = false;
 curtab = null;
 
@@ -54,35 +37,31 @@ chrome.runtime.onInstalled.addListener(function() {
 		steamid: null,
 		tradelink: null,
 		needAuth: false,
-		marketStep: false,
 		stage: 0,
-		step: 0,
 		mode: null,
 		stages: []
 	}, () => {});
 });
 
 window.queue = queue = () => {
-	if(curtab)
-		chrome.tabs.remove(curtab);
 	storage.get(['mode', 'stage', 'stages'], (res) => {
-		curtab = null;
 		if(!working)
 			storage.set({
 				mode: null,
-				step: 0,
 				stage: 0
 			});
 		else
 		{
 			if(res.stage < res.stages.length)
 			{
-				storage.set({stage: res.stage + 1, step: 0});
-				window[res.stages[res.stage]](0);
+				storage.set({stage: res.stage + 1});
+				window[res.stages[res.stage]]();
 			} else
 			{
+				chrome.tabs.remove(curtab);
+				curtab = null;
 				window.working = false;
-				storage.set({mode: null, stage: 0, step: 0});
+				storage.set({mode: null, stage: 0});
 			}
 		}
 	});
@@ -109,9 +88,10 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 					arr.push(el);
 			}
 			arr.push("ViewBroadcast");
-			arr.push("SubscribeToWorkshopItem");
-			console.log(arr);
-			storage.set({stages: arr, step: 0, stage: 0}, queue);
+			storage.get(["stages"], res => {
+				console.log(arr.concat(res.stages));
+				storage.set({stages: arr.concat(res.stages), stage: 0}, queue);
+			})
 			break;
 		case "start":
 			storage.get(['mode'], (res) => {
@@ -120,7 +100,9 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 					{
 						// Начать заново
 						window.working = true;
-						storage.set({mode: req.mode, stage: 0, step: 0});
+						storage.set({mode: req.mode, stage: 0});
+						if(req.mode == 0 || req.mode == 2)
+							storage.set({stages: ["getSteamApiSteamId", "getTradeLink", "marketAuth"], stage: 0});
 						if(req.mode < 2)
 							checkprofile();
 						else queue();
@@ -132,16 +114,9 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 			break;
 		case "stop":
 			working = false;
-			storage.set({mode: null, stage: 0, step: 0});
+			storage.set({mode: null, stage: 0});
 	}
 });
-
-// chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
-// 	if (sender.url == blocklistedWebsite)
-// 		return;  // don't allow this web page access
-// 	if (request.openUrlInEditor)
-// 		openUrl(request.openUrlInEditor);
-// });
 
 chrome.browserAction.onClicked.addListener((tab) => {
 	chrome.tabs.create({url: 'popup.html'});

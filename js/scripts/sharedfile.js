@@ -1,6 +1,6 @@
 function runWorkshop()
 {
-	storage.set({workshop: false});
+	storage.set({current: ""});
 	if(jQuery('.selected:last')[0].id == 'SubscribeItemOptionAdd')
 	{
 		jQuery.ajax({
@@ -21,8 +21,8 @@ function runWorkshop()
 
 function start()
 {
-	storage.get(["workshop"], res => {
-		if(res.workshop)
+	storage.get(["current"], res => {
+		if(res.current == "workshop")
 			runWorkshop();
 	});
 }

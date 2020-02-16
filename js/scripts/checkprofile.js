@@ -18,14 +18,15 @@ function runCheck()
 				bages[cur[0]] = (cur[1] != 'on');
 			});
 			chrome.runtime.sendMessage({action: "bages", bages: bages});
+			//close();
 		});
 	}
 }
 
 function start()
 {
-	storage.get(["checkprofile"], res => {
-		if(res.checkprofile)
+	storage.get(["current"], res => {
+		if(res.current = "checkprofile")
 			runCheck();
 	});
 }

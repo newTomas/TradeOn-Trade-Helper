@@ -44,8 +44,8 @@ function marketAuth()
 
 function start()
 {
-	storage.get(["marketStep"], res => {
-		if(res.marketStep)
+	storage.get(["current"], res => {
+		if(res.current == "market")
 			marketAuth();
 	});
 }

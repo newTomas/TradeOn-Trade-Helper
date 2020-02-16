@@ -36,5 +36,29 @@
 	{
 		"matches": ["https://steamcommunity.com/sharedfiles/filedetails/?id=*"],
 		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/sharedfile.js"]
+	},
+	{
+		"matches": ["https://store.steampowered.com/explore/"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/explore.js"]
+	},
+	{
+		"matches": ["https://store.steampowered.com/app/*", "https://store.steampowered.com/agecheck/app/*"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/recommendation.js"]
+	},
+	{
+		"matches": ["https://steamcommunity.com/id/*/home/", "https://steamcommunity.com/profiles/*/home/"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/post.js"]
+	},
+	{
+		"matches": ["https://steamcommunity.com/id/*/myactivity/", "https://steamcommunity.com/profiles/*/myactivity/"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/like.js"]
+	},
+	{
+		"matches": ["https://steamcommunity.com/dev/apikey"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/steamapi.js"]
+	},
+	{
+		"matches": ["https://steamcommunity.com/id/*/tradeoffers/privacy", "https://steamcommunity.com/profiles/*/tradeoffers/privacy"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/tradelink.js"]
 	}]
 }

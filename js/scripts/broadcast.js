@@ -1,6 +1,6 @@
 function runBroadcast()
 {
-	storage.set({broadcast: false});
+	storage.set({current: ""});
 	setTimeout(() => {
 		chrome.runtime.sendMessage({action: "queue"});
 	}, 5000);
@@ -8,8 +8,8 @@ function runBroadcast()
 
 function start()
 {
-	storage.get(["broadcast"], res => {
-		if(res.broadcast)
+	storage.get(["current"], res => {
+		if(res.current == "broadcast")
 			runBroadcast();
 	});
 }

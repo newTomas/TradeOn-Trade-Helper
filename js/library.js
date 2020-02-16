@@ -13,87 +13,76 @@ storage.get = async (keys, callback) => {
 	});
 }
 
-async function getSteamApiSteamId(step)
+async function getSteamApiSteamId()
 {
-	if(step == 0)
-	{
-		storage.set({step: 1});
-		chrome.tabs.create({url: 'https://steamcommunity.com/dev/apikey'}, (tab) => {
-			getSteamApiSteamId1(tab);
-		});
-	}
-}
-
-async function getTradeLink(step)
-{
-	if(step == 0)
-	{
-		storage.set({step: 1});
-		chrome.tabs.create({url: 'https://steamcommunity.com/id/me/tradeoffers/privacy'}, (tab) => {
-			getTradeLink1(tab);
-		});
-	}
-}
-
-async function marketAuth(step)
-{
-	if(step == 0)
-	{
-		storage.set({step: 1, marketStep: true});
-		chrome.tabs.create({url: 'https://market.csgo.com/'});
-	}
-}
-
-async function checkprofile(step)
-{
-	storage.set({step: 1, checkprofile: true});
-	chrome.tabs.create({url: 'https://steamcommunity.com/'});
-}
-
-async function ViewBroadcast(step)
-{
-	if(step == 0)
-	{
-		storage.set({step: 1, broadcast: true});
-		chrome.tabs.create({url: topbroadcast}, (tab) => {
+	storage.set({step: 1, current: "steamapi"});
+	if(curtab)
+		chrome.tabs.update(curtab, {url: 'https://steamcommunity.com/dev/apikey'}, tab => {
 			curtab = tab.id;
 		});
-	}
+	else chrome.tabs.create({url: 'https://steamcommunity.com/dev/apikey'}, (tab) => {
+		curtab = tab.id;
+	});
 }
 
-async function SubscribeToWorkshopItem(step)
+async function getTradeLink()
 {
-	if(step == 0)
-	{
-		storage.set({step: 1, workshop: true});
-		chrome.tabs.create({url: top30workshop[Math.round(Math.random() * 29)]}, (tab) => {
+	storage.set({step: 1, current: "tradelink"});
+	if(curtab)
+		chrome.tabs.update(curtab, {url: 'https://steamcommunity.com/id/me/tradeoffers/privacy'}, tab => {
 			curtab = tab.id;
 		});
-	}
-}
-
-async function getSteamApiSteamId1(tab)
-{
-	chrome.tabs.executeScript(tab.id, {
-		file: "js/jquery-3.4.1.min.js"
-	});
-	chrome.tabs.executeScript(tab.id, {
-		file: "js/library.js"
-	});
-	chrome.tabs.executeScript(tab.id, {
-		file: "js/scripts/steamapi.js"
+	else chrome.tabs.create({url: 'https://steamcommunity.com/id/me/tradeoffers/privacy'}, (tab) => {
+		curtab = tab.id;
 	});
 }
 
-async function getTradeLink1(tab)
+async function marketAuth()
 {
-	chrome.tabs.executeScript(tab.id, {
-		file: "js/jquery-3.4.1.min.js"
+	storage.set({step: 1, current: "market"});
+	if(curtab)
+		chrome.tabs.update(curtab, {url: 'https://market.csgo.com/'}, tab => {
+			curtab = tab.id;
+		});
+	else chrome.tabs.create({url: 'https://market.csgo.com/'}, (tab) => {
+		curtab = tab.id;
 	});
-	chrome.tabs.executeScript(tab.id, {
-		file: "js/library.js"
+}
+
+async function checkprofile()
+{
+	storage.set({step: 1, current: "checkprofile"});
+	chrome.tabs.create({url: 'https://steamcommunity.com/', active: false}, tab => {
+		curtab = tab.id;
 	});
-	chrome.tabs.executeScript(tab.id, {
-		file: "js/scripts/tradelink.js"
+}
+
+async function ViewBroadcast()
+{
+	storage.set({step: 1, current: "broadcast"});
+	if(curtab)
+		chrome.tabs.update(curtab, {url: topbroadcast}, tab => {
+			curtab = tab.id;
+		});
+	else chrome.tabs.create({url: topbroadcast}, tab => {
+		curtab = tab.id;
 	});
+}
+
+async function SubscribeToWorkshopItem()
+{
+	storage.set({step: 1, current: "workshop"});
+	chrome.tabs.create({url: top30workshop[Math.round(Math.random() * 29)]});
+}
+
+async function UseDiscoveryQueue()
+{
+	storage.set({step: 1, current: "discovery"});
+	chrome.tabs.create({url: 'https://store.steampowered.com/explore/'});
+}
+
+async function RateUpContentInActivityFeed()
+{
+	storage.set({step: 1, current: "activity"});
+	chrome.tabs.create({url: 'https://steamcommunity.com/id/me/home/'});
 }

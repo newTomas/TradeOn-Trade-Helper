@@ -1,6 +1,7 @@
 function getSteamApiSteamId2()
 {
 	jQuery("body").append("<script>jQuery('body').append(\"<p id='steamid' style='display: none;'>\"+g_steamID+\"</p>\")</script>");
+	console.log(jQuery("#steamid").text());
 	if(!jQuery("#steamid").text())
 		chrome.runtime.sendMessage({
 			action: "stop"
@@ -13,7 +14,6 @@ function getSteamApiSteamId2()
 				steamid: jQuery("#steamid").text()
 			});
 			chrome.runtime.sendMessage({action: "queue"});
-			close();
 			break;
 		case "Зарегистрировать новый ключ Steam Web API":
 			jQuery.ajax({
@@ -33,10 +33,17 @@ function getSteamApiSteamId2()
 					steamid: jQuery("#steamid").text()
 				});
 				chrome.runtime.sendMessage({action: "queue"});
-				close();
 			});
 		break;
 	}
 }
 
-window.addEventListener("load", getSteamApiSteamId2, false);
+function start()
+{
+	storage.get(["current"], res => {
+		if(res.current == "steamapi")
+			getSteamApiSteamId2();
+	});
+}
+
+window.addEventListener("load", start, false);
