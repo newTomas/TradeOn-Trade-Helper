@@ -11,9 +11,12 @@ function runWorkshop()
 		{
 				if(data.success != 1)
 				{
-					// Обработка ошибок...
+					chrome.runtime.sendMessage({action: "error", type: "sharedfile", errorcode: data.success});
+					return;
 				}
 				chrome.runtime.sendMessage({action: "queue"});
+		}).fail((jqXHR, textStatus, errorThrown) => {
+			chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "подписки на мастерскую", textStatus: textStatus, errorThrown: errorThrown, stop: false});
 		});
 	}
 	else chrome.runtime.sendMessage({action: "queue"});

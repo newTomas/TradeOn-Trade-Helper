@@ -1,12 +1,38 @@
-function post()
+function like()
 {
-	storage.get(["activity"], res => {
-		if(res.activity)
-		{
-			jQuery.find("a[id^='vote_up']")[0].click();
-			chrome.runtime.sendMessage({action: "queue"});
+	storage.set({current: null});
+	let sessionid = getSessionid();
+
+	if(jQuery('[id^=vote_up_userstatus_]:first').length == 0)
+	{
+		chrome.runtime.sendMessage({action: "error", type: "like"});
+		return;
+	}
+	var arr = jQuery('[id^=vote_up_userstatus_]:first')[0].id.split('_').reverse();
+	jQuery.ajax({
+		method: 'POST',
+		url: `https://steamcommunity.com/comment/UserStatusPublished/voteup/${arr[0]}/${arr[1]}/`,
+		data: {
+			vote: 1,
+			count: 6,
+			sessionid: sessionid,
+			feature2: -1,
+			newestfirstpagination: true
 		}
+	})
+	.done(function() {
+		chrome.runtime.sendMessage({action: "queue"});
+	}).fail((jqXHR, textStatus, errorThrown) => {
+		chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "получения market api", textStatus: textStatus, errorThrown: errorThrown, stop: false});
 	});
 }
 
-window.addEventListener("load", post, false);
+function start()
+{
+	storage.get(["current"], res => {
+		if(res.current == "like")
+			like();
+	});
+}
+
+window.addEventListener("load", start, false);

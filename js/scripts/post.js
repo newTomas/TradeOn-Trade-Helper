@@ -1,14 +1,25 @@
 function post()
 {
-	storage.get(["activity"], res => {
-		if(res.activity)
-		{
-			var arr = ["noob", "pro", "Boss", "NPC", "toxic", "Bug", "asap", "lol", "10Q", "kek", "bb", "Hello world!", "Lamer", "hi guys", "What's up?"];
-			var word = arr[Math.round( Math.random()*(arr.length - 1) )];
-			jQuery("#blotter_statuspost_textarea").val(word);
-			jQuery("#blotter_statuspost_submit").click();
-			location.href = "https://steamcommunity.com/id/me/myactivity/";
-		}
+	storage.set({current: null});
+	
+	var word = topWords[Math.round( Math.random()*(topWords.length - 1) )];
+	if(jQuery("#blotter_statuspost_textarea").length == 0)
+	{
+		chrome.runtime.sendMessage({action: "error", type: "post"});
+		return;
+	}
+	
+	jQuery("#blotter_statuspost_textarea").val(word);
+	jQuery("#blotter_statuspost_submit").click();
+	storage.set({current: "like"});
+	location.href = "https://steamcommunity.com/id/me/myactivity/";
+}
+
+function start()
+{
+	storage.get(["current"], res => {
+		if(res.current == "activity")
+			group();
 	});
 }
 

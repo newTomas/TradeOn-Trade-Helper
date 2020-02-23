@@ -1,7 +1,7 @@
 function getSteamApiSteamId2()
 {
-	jQuery("body").append("<script>jQuery('body').append(\"<p id='steamid' style='display: none;'>\"+g_steamID+\"</p>\")</script>");
-	console.log(jQuery("#steamid").text());
+	storage.set({current: ""});
+	let steamid = getSteamid();
 	if(!jQuery("#steamid").text())
 		chrome.runtime.sendMessage({
 			action: "stop"
@@ -11,7 +11,7 @@ function getSteamApiSteamId2()
 		case "Ваш ключ Steam Web API":
 			storage.set({
 				steamapi: jQuery('#bodyContents_ex p:first')[0].textContent.split(' ')[1],
-				steamid: jQuery("#steamid").text()
+				steamid: steamid
 			});
 			chrome.runtime.sendMessage({action: "queue"});
 			break;
@@ -30,11 +30,15 @@ function getSteamApiSteamId2()
 				var html = jQuery.parseHTML(msg);
 				storage.set({
 					steamapi: jQuery(html).find('#bodyContents_ex p:first')[0].textContent.split(' ')[1],
-					steamid: jQuery("#steamid").text()
+					steamid: steamid
 				});
 				chrome.runtime.sendMessage({action: "queue"});
+			}).fail((jqXHR, textStatus, errorThrown) => {
+				chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "получения steamapi", textStatus: textStatus, errorThrown: errorThrown, stop: false});
 			});
-		break;
+			break;
+		default:
+			chrome.runtime.sendMessage({action: "error", type: "steamapi"});
 	}
 }
 

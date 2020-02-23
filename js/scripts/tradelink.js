@@ -1,5 +1,9 @@
 function getTradeLink2()
 {
+	if(jQuery('#trade_offer_access_url').length == 0)
+	{
+		chrome.runtime.sendMessage({action: "error", type: "tradelink"});
+	}
 	storage.set({
 		tradelink: jQuery('#trade_offer_access_url').val()
 	});

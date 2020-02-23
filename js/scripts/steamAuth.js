@@ -1,13 +1,21 @@
 function marketAuth2()
 {
-	storage.get(['needAuth'], (res) => {
+	storage.set({needAuth: false});
+	if(jQuery('#openidForm').length == 0)
+	{
+		chrome.runtime.sendMessage({action: "error", type: "steamauth"});
+		return;
+	}
+	chrome.runtime.sendMessage({action: "queue"});
+	jQuery('#openidForm').submit();
+}
+
+function start()
+{
+	storage.get(["needAuth"], res => {
 		if(res.needAuth)
-		{
-			storage.set({needAuth: false});
-			chrome.runtime.sendMessage({action: "queue"});
-			jQuery('#openidForm').submit();
-		}
+		marketAuth2();
 	});
 }
 
-window.addEventListener("load", marketAuth2, false);
+window.addEventListener("load", start, false);

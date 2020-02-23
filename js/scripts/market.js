@@ -1,13 +1,20 @@
 function marketAuth()
 {
+	storage.set({current: null});
 	if(jQuery('#button-auth-steam').length == 0)
 	{
-		storage.set({
-			step: 3,
-			marketStep: false
-		});
 		storage.get(["tradelink"], res =>{
+			if(!res.tradelink)
+			{
+				chrome.runtime.sendMessage({action: "error", type: "markettradelink"});
+				return;
+			}
 			var csrf = jQuery('[name=csrf-token]').attr('content');
+			if(!csrf)
+			{
+				chrome.runtime.sendMessage({action: "error", type: "csrf"});
+				return;
+			}
 			jQuery.ajax({
 				method: 'POST',
 				url: 'https://market.csgo.com/sell/newcode/'+res.tradelink.split('=')[2],
@@ -27,17 +34,27 @@ function marketAuth()
 					})
 					.done(function( msg ) {
 						var html = jQuery.parseHTML(msg);
+						if(!jQuery(html).find('.col0:first').text())
+						{
+							chrome.runtime.sendMessage({action: "error", type: "marketapi"});
+							return;
+						}
 						storage.set({
 							tmapi: jQuery(html).find('.col0:first').text()
 						});
 						chrome.runtime.sendMessage({action: "queue"});
+					}).fail((jqXHR, textStatus, errorThrown) => {
+						chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "получения market api", textStatus: textStatus, errorThrown: errorThrown, stop: false});
 					});
+				else chrome.runtime.sendMessage({action: "error", type: "markettrade", errorcode: msg.result});
+			}).fail((jqXHR, textStatus, errorThrown) => {
+				chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "установки tradelink", textStatus: textStatus, errorThrown: errorThrown, stop: false});
 			});
 		});
 	}
 	else
 	{
-		storage.set({step: 2, needAuth: true});
+		storage.set({current: "market", needAuth: true});
 		location.href = "https://market.csgo.com/login";
 	}
 }
