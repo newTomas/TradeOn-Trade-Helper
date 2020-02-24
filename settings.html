@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html style="width: 300px; height: 400px;">
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="js/jquery-3.4.1.min.js"></script>
+		<link href="/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+	</head>
+	<body class="grid">
+		<header class="grid">
+			<div class="header grid">
+				<div class="logo">
+
+				</div>
+				<div class="links grid">
+					<div class="group grid">
+						<a href="https://vk.com/tradeon" target="_blank" class="button">Группа</a>
+					</div>
+					<div class="site grid">
+						<a href="http://tradeon.store/" target="_blank" class="button">Сайт</a>
+					</div>
+				</div>
+			</div>
+			<div class="tabs grid">
+				<div class="grid">
+					<a href="popup.html" class="button">Настройка профиля</a>
+				</div>
+				<div class="grid">
+					<a href="#" class="button">Soon</a>
+				</div>
+				<div class="grid">
+					<a href="info.html" class="button">Информация</a>
+				</div>
+			</div>
+		</header>
+		<article class="grid">
+			<div class="grid horizontal2">
+				<p class="grid articletext">Получить 1 уровень (без затрат)</p>
+				<label class="switch">
+					<input type="checkbox" id="base">
+					<span class="slider round"></span>
+				</label>
+				<i class="grid oneinrow articletext fas fa-caret-down fa-2x"></i>
+				<div class="grid oneinrow hidden droplist">
+					<div class="grid horizontal4">
+						<input name="group" class="grid articletext" type="radio" value="random">
+						<p class="grid articletext">Вступление в случайную из топ 100 групп</p>
+						<input name="group" class="grid articletext" type="radio" value="specific">
+						<div class="grid vertical2">
+							<p class="grid">Вступление в заданную группу</p>
+							<input type="text" id="group">
+						</div>
+					</div>
+					<div class="grid horizontal4">
+						<input name="name" class="grid articletext" type="radio" value="random">
+						<p class="grid articletext">Установка случайного имени</p>
+						<input name="name" class="grid articletext" type="radio" value="specific">
+						<div class="grid vertical2">
+							<p class="grid">Установка заданного имени</p>
+							<input type="text" id="name">
+						</div>
+					</div>
+					<div class="grid horizontal4">
+						<input name="info" class="grid articletext" type="radio" value="random">
+						<p class="grid articletext">Случайная информация о себе</p>
+						<input name="info" class="grid articletext" type="radio" value="specific">
+						<div class="grid vertical2">
+							<p class="grid">Заданная информация о себе</p>
+							<input type="text" id="info">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="grid horizontal2">
+				<p class="grid articletext">Получить steamapi/tmapi/steamid/tradelink</p>
+				<label class="switch">
+					<input type="checkbox" id="gets">
+					<span class="slider round"></span>
+				</label>
+				<i class="grid oneinrow articletext fas fa-caret-down fa-2x"></i>
+				<div class="grid oneinrow hidden droplist">
+					<div class="grid horizontal2">
+						<p class="grid articletext">Получить steam api и steamid</p>
+						<label class="switch">
+							<input type="checkbox" id="getsteamapiid" name="steamapiid">
+							<span class="slider round"></span>
+						</label>
+					</div>
+					<div class="grid horizontal2">
+						<p class="grid articletext">Получить tm api</p>
+						<label class="switch">
+							<input type="checkbox" id="gettmapi" name="tmapi">
+							<span class="slider round"></span>
+						</label>
+					</div>
+					<div class="grid horizontal2">
+						<p class="grid articletext">Получить tradelink</p>
+						<label class="switch">
+							<input type="checkbox" id="gettradelink" name="tradelink">
+							<span class="slider round"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="grid horizontal2">
+				<p class="grid articletext">Создать онлайн на аккаунте (20 секунд показывает, что профиль в сети)</p>
+				<label class="switch">
+					<input type="checkbox" id="online">
+					<span class="slider round"></span>
+				</label>
+			</div>
+		</article>
+		<footer class="grid">
+			<div class="ott grid">steam api key: <input type="text" readonly id="steamapi"></div>
+			<div class="ott grid">tm api key: <input type="text" readonly id="tmapi"></div>
+			<div class="ott grid">steam id: <input type="text" readonly id="steamid"></div>
+			<div class="ott grid">treade link: <input type="text" readonly id="tradelink"></div>
+			<div class="grid"><textarea readonly id="errorlog" style="resize: none;"></textarea></div>
+		</footer>
+		<script src="js/library.js"></script>
+		<script src="js/settings.js"></script>
+	</body>
+</html>

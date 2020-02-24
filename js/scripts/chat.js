@@ -2,7 +2,7 @@ function chat()
 {
 	setTimeout(() => {
 		chrome.runtime.sendMessage({action: "queue"});
-	}, 5000);
+	}, 20000);
 }
 
 function start()

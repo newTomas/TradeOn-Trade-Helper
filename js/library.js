@@ -144,12 +144,19 @@ async function AddItemToWishlist()
 async function JoinGroup()
 {
 	storage.set({current: "group"});
-	if(curtab)
-		chrome.tabs.update(curtab, {url: top100group[Math.round(Math.random()*99)]}, tab => {
+	storage.get(['customsettings', 'mode'], res => {
+		let group;
+		if(res.mode == 3 && res.customsettings.group)
+			group = res.customsettings.group;
+		else group = top100group[Math.round(Math.random()*99)];
+
+		if(curtab)
+			chrome.tabs.update(curtab, {url: group}, tab => {
+				curtab = tab.id;
+			});
+		else chrome.tabs.create({url: group, active: false}, tab => {
 			curtab = tab.id;
 		});
-	else chrome.tabs.create({url: top100group[Math.round(Math.random()*99)], active: false}, tab => {
-		curtab = tab.id;
 	});
 }
 

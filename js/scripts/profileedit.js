@@ -32,7 +32,14 @@ async function SetupCommunityRealName()
 		chrome.runtime.sendMessage({action: "error", type: "realname"});
 		return;
 	}
-	jQuery("#real_name").val(topnames[Math.round(Math.random()*199)]);
+	storage.get(["customsettings", "mode"], res => {
+		let name;
+		if(res.mode == 3 && res.customsettings.name)
+			name = res.customsettings.name;
+		else name = topnames[Math.round(Math.random()*199)];
+
+		jQuery("#real_name").val(name);
+	});
 }
 
 async function FeatureBadgeOnProfile()
@@ -55,7 +62,14 @@ async function AddSummary()
 		chrome.runtime.sendMessage({action: "error", type: "summary"});
 		return;
 	}
-	jQuery('#summary').val(topWords[Math.round(Math.random() * (topWords.length - 1))]);
+	storage.get(["customsettings", "mode"], res => {
+		let summary;
+		if(res.mode == 3 && res.customsettings.info)
+			summary = res.customsettings.info;
+		else summary = topWords[Math.round(Math.random() * (topWords.length - 1))];
+
+		jQuery('#summary').val(summary);
+	});
 }
 
 async function MainGroup()

@@ -12,12 +12,26 @@ chrome.runtime.onInstalled.addListener(function() {
 		stage: 0,
 		current: null,
 		mode: null,
-		stages: []
+		errors: [],
+		stages: [],
+		custom: {
+			base: false,
+			gets: false,
+			online: false
+		},
+		customsettings: {
+			steamapiid: true,
+			tmapi: true,
+			tradelink: true,
+			group: null,
+			name: null,
+			info: null
+		}
 	}, () => {});
 });
 
 window.queue = queue = () => {
-	storage.set({current: ''});
+	storage.set({current: null});
 	storage.get(['mode', 'stage', 'stages'], (res) => {
 		if(!working)
 			storage.set({
@@ -32,10 +46,7 @@ window.queue = queue = () => {
 				window[res.stages[res.stage]]();
 			} else
 			{
-				chrome.tabs.remove(curtab);
-				curtab = null;
-				window.working = false;
-				storage.set({mode: null, stage: 0, stages: []});
+				stop();
 			}
 		}
 	});
@@ -45,6 +56,20 @@ function stop()
 {
 	working = false;
 	storage.set({mode: null, stage: 0, current: null});
+	if(curtab)
+		chrome.tabs.remove(curtab);
+	curtab = null;
+}
+
+function errorhandler(msg, dostop=false)
+{
+	console.log(msg);
+	storage.get(['errors'], (res) => {
+		res.errors.push(msg);
+		storage.set(res);
+		if(dostop)
+			stop();
+	});
 }
 
 chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
@@ -59,99 +84,91 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 			switch(req.type)
 			{
 				case "cardcheck":
-					console.error(`Не удалось получить информацию по карточке ${req.data}. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.errorcode}.`);
+					errorhandler(`Не удалось получить информацию по карточке ${req.data}. Код ошибки: ${req.errorcode}.`);
 					break;
 				case "cardbuy":
-					console.error(`Не удалось выставить ордер на покупку карточки ${req.data}. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.errorcode}.`);
+					errorhandler(`Не удалось выставить ордер на покупку карточки ${req.data}. Код ошибки: ${req.errorcode}.`);
 					break;
 				case "ordercheck":
-					console.error(`Не удалось проверить ордер на покупку карточки ${req.data}. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.errorcode}.`);
+					errorhandler(`Не удалось проверить ордер на покупку карточки ${req.data}. Код ошибки: ${req.errorcode}.`);
 					break;
 				case "levelup":
-					console.error(`Не удалось создать значок (значки). Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.errorcode}.`);
+					errorhandler(`Не удалось создать значок (значки). Код ошибки: ${req.errorcode}.`);
 					break;
 				case "getgems":
-					console.error(`Не удалось превратить смайлик ${req.data} в самоцветы. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.errorcode}.`);
+					errorhandler(`Не удалось превратить смайлик ${req.data} в самоцветы. Код ошибки: ${req.errorcode}.`);
 					break;
 				case "searchgems":
-					console.error(`Не удалось найти подходящий смайлик для превращения в самоцветы. Пожалуйста, убедитесь что стим работает корректно и подходящий смайлик есть, а после того как закончится работа скрипта, запустите повторно.`);
+					errorhandler(`Не удалось найти подходящий смайлик для превращения в самоцветы.`);
 					break;
 				case "ajax":
-					console.error(`Не удалось отправить запрос API на этапе ${req.stage}. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.textStatus}. Текст ошибки: ${req.errorThrown}`);
-					if(req.stop)
-						stop();
+					errorhandler(`Не удалось отправить запрос API на этапе ${req.stage}. Код ошибки: ${req.textStatus}. Текст ошибки: ${req.errorThrown}`, req.stop);
 					break;
 				case "post":
-					console.error(`Не удалось найти поле для ввода статуса. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось найти поле для ввода статуса.`);
 					break;
 				case "like":
-					console.error(`Не удалось найти статус, чтобы поставить лайк. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось найти статус, чтобы поставить лайк.`);
 					break;
 				case "searchavatar":
-					console.error(`Не удалось найти официальные аватарки. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось найти официальные аватарки.`);
 					break;
 				case "searchbages":
-					console.error(`Не удалось получить информацию по значкам. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
-					stop();
+					errorhandler(`Не удалось получить информацию по значкам.`, true);
 					break;
 				case "discovery":
-					console.error(`Не удалось начать просмотр списка рекомендаций. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось начать просмотр списка рекомендаций.`);
 					break;
 				case "csrf":
-					console.error(`Не удалось получить csrf. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось получить csrf (market).`);
 					break;
 				case "markettrade":
-					console.error(`market не принял новый tradelink. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.errorcode}`);
+					errorhandler(`market не принял новый tradelink. Код ошибки: ${req.errorcode}`);
 					break;
 				case "marketapi":
-					console.error(`Не удалось получить market api. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось получить market api.`);
 					break;
 				case "privacy":
-					console.error(`Не удалось установить настройки приватности. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.errorcode}`);
+					errorhandler(`Не удалось установить настройки приватности. Код ошибки: ${req.errorcode}`);
 					break;
 				case "profilesave":
-					console.error(`Не удалось сохранить профиль. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось сохранить профиль.`);
 					break;
 				case "realname":
-					console.error(`Не удалось установить реальное имя. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось установить реальное имя.`);
 					break;
 				case "badge":
-					console.error(`Не удалось установить значок. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось установить значок.`);
 					break;
 				case "summary":
-					console.error(`Не удалось установить информацию о себе. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось установить информацию о себе.`);
 					break;
 				case "wishlist":
-					console.error(`Не удалось добавить игру в список желаемого. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось добавить игру в список желаемого.`);
 					break;
 				case "sharedfile":
-					console.error(`Не удалось подписаться на мастерскую. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта. Код ошибки: ${req.errorcode}`);
+					errorhandler(`Не удалось подписаться на мастерскую. Код ошибки: ${req.errorcode}`);
 					break;
 				case "steamapi":
-					console.error(`Не удалось получить steamapi. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось получить steamapi.`);
 					break;
 				case "steamauth":
-					console.error(`Не удалось авторизоваться в маркете через стим. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
-					stop();
+					errorhandler(`Не удалось авторизоваться в маркете через стим.`, true);
 					break;
 				case "tradelink":
-					console.error(`Не удалось получить trade link. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
-					stop();
+					errorhandler(`Не удалось получить trade link.`, true);
 					break;
 				case "markettradelink":
-					console.error(`Trade link не был получен, невозможно его установить в market. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
-					stop();
+					errorhandler(`Trade link не был получен, невозможно его установить в market.`, true);
 					break;
 				case "nogroupid":
-					console.error(`Не удалось найти группу, которую можно установить как главную. Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
+					errorhandler(`Не удалось найти группу, которую можно установить как главную.`);
 					break;
 				case "nosteamid":
-					console.error(`Не удалось получить steamid, возможно вы не авторизованы! Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
-					stop();
+					errorhandler(`Не удалось получить steamid, возможно вы не авторизованы!`, true);
 					break;
 				case "nosessionid":
-					console.error(`Не удалось получить sessionid, возможно вы не авторизованы! Пожалуйста, убедитесь что стим работает корректно, и запустите повторно, после того как закончится работа скрипта.`);
-					stop();
+					errorhandler(`Не удалось получить sessionid, возможно вы не авторизованы!`, true);
 					break;
 			}
 			queue();
@@ -172,25 +189,49 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 				}
 			}
 			//profilearr = ["FeatureBadgeOnProfile", "SetupCommunityRealName"];
-			arr.push("ProfileEdit", "Privacy", "Chat");
-			storage.get(["stages"], res => {
+			arr.push("ProfileEdit", "Privacy");
+			storage.get(["stages", "mode"], res => {
+				if(res.mode != 3)
+					arr.push('Chat');
 				console.log(arr.concat(res.stages));
 				storage.set({stages: arr.concat(res.stages), stage: 0, profilearr: profilearr}, queue);
 			})
 			break;
 		case "start":
-			storage.get(['mode'], (res) => {
+			storage.get(['custom', 'customsettings'], (res) => {
 				if(!window.working)
 					if(!req.continue)
 					{
 						// Начать заново
 						window.working = true;
 						storage.set({mode: req.mode, stage: 0, stages: []});
-						if(req.mode == 0 || req.mode == 2)
-							storage.set({stages: ["getSteamApiSteamId", "getTradeLink", "marketAuth"], stage: 0});
-						if(req.mode < 2)
-							checkprofile();
-						else queue();
+						if(req.mode == 3)
+						{
+							let stages = [];
+							if(res.custom.gets)
+							{
+								if(res.customsettings.steamapiid)
+									stages.push('getSteamApiSteamId');
+								if(res.customsettings.tradelink)
+									stages.push('getTradeLink');
+								if(res.customsettings.tmapi)
+									stages.push('marketAuth');
+							}
+							if(res.custom.online)
+								stages.push('Chat');
+							storage.set({stages: stages});
+							if(res.custom.base)
+								checkprofile();
+							else queue();
+						}
+						else
+						{
+							if(req.mode == 0 || req.mode == 2)
+								storage.set({stages: ["getSteamApiSteamId", "getTradeLink", "marketAuth"]});
+							if(req.mode < 2)
+								checkprofile();
+							else queue();
+						}
 					} else
 					{
 						// Продолжение после сбоя

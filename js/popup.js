@@ -4,11 +4,12 @@ function start()
 
 	const modes = ['fullstart', 'decorstart', 'gettinginfostart', 'customstart'];
 
-	storage.get(['steamapi', 'tmapi', 'steamid', 'tradelink', 'mode'], (res) => {
+	storage.get(['steamapi', 'tmapi', 'steamid', 'tradelink', 'mode', 'errors'], (res) => {
 		document.getElementById('steamapi').value = res.steamapi;
 		document.getElementById('tmapi').value = res.tmapi;
 		document.getElementById('steamid').value = res.steamid;
 		document.getElementById('tradelink').value = res.tradelink;
+		jQuery('#errorlog').val(res.errors.join('\n'));
 		if(bg.working)
 		{
 			document.getElementById(modes[res.mode]).classList.add('runned');
@@ -42,12 +43,11 @@ function start()
 						document.getElementById(modes[changes[key].newValue]).classList.add('runned');
 					else document.getElementById(modes[changes[key].oldValue]).classList.remove('runned');
 					break;
+				case "errors":
+					jQuery('#errorlog').val(changes[key].newValue.join('\n'));
+					break;
 			}
 		}
-		// if('working' in changes)
-		// {
-		// 	document.getElementById('start').disabled = changes['working'].newValue;
-		// }
 	});
 
 	document.getElementById('fullstart').onclick = (e) => {
