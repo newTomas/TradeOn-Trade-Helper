@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Initial Profile Setting",
 	"description": "Скрипт для первоначальной настройки профиля стим перед использованием ботов-трейдеров.",
-	"version": "0.9.6",
+	"version": "0.9.7",
 	"permissions": ["https://steamcommunity.com/*", "https://*.steampowered.com/*", "https://steamladder.com/ladder/groups/", "https://market.csgo.com/*", "storage", "tabs"],
 	"background": {
 		"scripts": ["js/jquery-3.4.1.min.js", "js/library.js", "js/consts.js", "js/background.js"],

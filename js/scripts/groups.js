@@ -17,8 +17,9 @@ function group()
 
 function err()
 {
-	storage.get(['stage'], (res) => {
-		storage.set({stage: res.stage - 1});
+	storage.get(['stage', 'customsettings'], (res) => {
+		if(!res.customsettings.group)
+			storage.set({stage: res.stage - 1});
 		chrome.runtime.sendMessage({action: "queue"});
 	});
 }

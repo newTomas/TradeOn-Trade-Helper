@@ -14,6 +14,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		mode: null,
 		errors: [],
 		stages: [],
+		attempts: 0,
 		custom: {
 			base: false,
 			gets: false,
@@ -64,6 +65,7 @@ function stop()
 function errorhandler(msg, dostop=false)
 {
 	console.log(msg);
+	return;
 	storage.get(['errors'], (res) => {
 		res.errors.push(msg);
 		storage.set(res);
@@ -171,7 +173,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 					errorhandler(`Не удалось получить sessionid, возможно вы не авторизованы!`, true);
 					break;
 			}
-			queue();
+			//queue();
 			break;
 		case "bages":
 			let needs = ["ViewBroadcast", "SubscribeToWorkshopItem", "UseDiscoveryQueue", "RateUpContentInActivityFeed", "AddItemToWishlist", "JoinGroup", "SetupCommunityRealName", "SearchInDiscussions", "FeatureBadgeOnProfile", "SetupCommunityAvatar"];
