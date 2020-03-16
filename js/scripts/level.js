@@ -141,6 +141,7 @@ function done()
 	left--;
 	if(!left)
 	{
+		console.log('all done...');
 		storage.set({current: "levelup"}, () => {
 			location.href = `https://steamcommunity.com/profiles/${steamid}/gamecards/730/`;
 		});
@@ -149,10 +150,10 @@ function done()
 
 function start()
 {
-	// storage.get(["current"], res => {
-	// 	if(res.current == "level")
-	// 		Level();
-	// });
+	storage.get(["current"], res => {
+		if(res.current == "level")
+			Level();
+	});
 }
 
 window.addEventListener("load", start, false);

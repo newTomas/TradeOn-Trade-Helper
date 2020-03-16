@@ -65,10 +65,10 @@ async function marketAuth()
 {
 	storage.set({current: "market"});
 	if(curtab)
-		chrome.tabs.update(curtab, {url: 'https://market.csgo.com/'}, tab => {
+		chrome.tabs.update(curtab, {url: 'https://market.csgo.com/sell'}, tab => {
 			curtab = tab.id;
 		});
-	else chrome.tabs.create({url: 'https://market.csgo.com/', active: false}, (tab) => {
+	else chrome.tabs.create({url: 'https://market.csgo.com/sell', active: false}, (tab) => {
 		curtab = tab.id;
 	});
 }

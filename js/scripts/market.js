@@ -1,9 +1,15 @@
 function marketAuth()
 {
-	storage.set({current: null});
 	if(jQuery('#button-auth-steam').length == 0)
 	{
-		storage.get(["tradelink"], res =>{
+		storage.get(["tradelink", "steamid"], res =>{
+			if(/http:\/\/steamcommunity.com\/profiles\/([0-9]+)\/tradeoffers\/privacy/.exec(jQuery('.formpart.col1:first a').attr('href'))[1] != res.steamid)
+			{
+				location.href = "https://market.csgo.com/login/out";
+				return;
+			}
+			storage.set({current: null});
+			jQuery('.formpart.col1:first a').attr('href')
 			if(!res.tradelink)
 			{
 				chrome.runtime.sendMessage({action: "error", type: "markettradelink"});

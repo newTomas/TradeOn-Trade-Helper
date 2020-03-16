@@ -1,6 +1,11 @@
 function ava()
 {
 	storage.set({current: null});
+	if(jQuery('#avatarForm').length == 0)
+	{
+		chrome.runtime.sendMessage({action: "error", type: "ava"});
+		return;
+	}
 	jQuery.ajax({
 		method: "POST",
 		url: jQuery('#avatarForm')[0].action,

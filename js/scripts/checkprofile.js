@@ -32,6 +32,7 @@ function runGems()
 	jQuery.ajax({
 		url: `https://steamcommunity.com/inventory/${steamid}/753/6?l=russian`
 	}).done(function(data) {
+		//console.log(data);
 		var flag = false;
 		for(var i = 0; i < data.descriptions.length; i++)
 		{
@@ -50,19 +51,25 @@ function runGems()
 		}
 		if(flag)
 		{
+			for(var j = 0; j < data.assets.length; j++)
+			{
+				if(data.assets[j].classid == data.descriptions[i].classid)
+					break;
+			}
 			jQuery.ajax({
 				method: "POST",
 				url: `https://steamcommunity.com/profiles/${steamid}/ajaxgrindintogoo/`,
 				data: {
 					sessionid: sessionid,
 					appid: 730,
-					assetid: data.assets[i].assetid,
-					contextid: data.assets[i].contextid,
+					assetid: data.assets[j].assetid,
+					contextid: data.assets[j].contextid,
 					goo_value_expected: 100
 				}
 			}).done(function(data) {
 				if(data.success != 1)
 					chrome.runtime.sendMessage({action: "error", type: "getgems", data: data.descriptions[i].market_name, errorcode: msg.success});
+				chrome.runtime.sendMessage({action: "queue"});
 			}).fail((jqXHR, textStatus, errorThrown) => {
 				chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "преобразовании фона в самоцветы", textStatus: textStatus, errorThrown: errorThrown});
 			});

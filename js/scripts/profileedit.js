@@ -22,7 +22,29 @@ async function End()
 
 async function Background()
 {
-	
+	let sessionid = getSessionid();
+	jQuery.ajax({
+		method: "POST",
+		url: "https://steamcommunity.com/id/me/ajaxgetplayerbackgrounds",
+		data:
+		{
+			sessionid: sessionid
+		}
+	}).done(function(data) {
+		let id = data.data.profilebackgroundsowned[0].communityitemid;
+		if(!id)
+		{
+			chrome.runtime.sendMessage({action: "error", type: "background"});
+			console.log(data);
+		}
+		else
+		{
+			jQuery('#profile_background').val(id);
+			End();
+		}
+	}).fail((jqXHR, textStatus, errorThrown) => {
+		chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "получения списка фонов", textStatus: textStatus, errorThrown: errorThrown, stop: false});
+	});
 }
 
 async function SetupCommunityRealName()

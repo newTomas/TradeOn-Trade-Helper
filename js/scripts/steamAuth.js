@@ -6,7 +6,7 @@ function marketAuth2()
 		chrome.runtime.sendMessage({action: "error", type: "steamauth"});
 		return;
 	}
-	chrome.runtime.sendMessage({action: "queue"});
+	//chrome.runtime.sendMessage({action: "queue"});
 	jQuery('#openidForm').submit();
 }
 

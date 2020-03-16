@@ -1,3 +1,5 @@
+var loaded = false;
+
 function recommendation()
 {
 	if(jQuery("#next_in_queue_form").length == 0)
@@ -5,6 +7,23 @@ function recommendation()
 		chrome.runtime.sendMessage({action: "error", type: "explore"});
 		return;
 	}
+	jQuery("#next_in_queue_form").submit();
+}
+
+function waitNextButton()
+{
+	if(loaded)
+	{
+		recommendation();
+		return;
+	}
+	
+	if(jQuery("#next_in_queue_form").length == 0)
+	{
+		setTimeout(waitNextButton, 100);
+		return;
+	}
+
 	jQuery("#next_in_queue_form").submit();
 }
 
@@ -42,10 +61,15 @@ function start()
 {
 	storage.get(["current"], res => {
 		if(res.current == "discovery")
-			recommendation();
+			loaded = true;
 		else if(res.current == "wishlist")
 			runWishlist();
 	});
 }
 
 window.addEventListener("load", start, false);
+
+storage.get(["current"], res => {
+	if(res.current == "discovery")
+		waitNextButton();
+});

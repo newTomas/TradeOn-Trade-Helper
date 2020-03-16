@@ -65,7 +65,6 @@ function stop()
 function errorhandler(msg, dostop=false)
 {
 	console.log(msg);
-	return;
 	storage.get(['errors'], (res) => {
 		res.errors.push(msg);
 		storage.set(res);
@@ -112,8 +111,30 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 				case "like":
 					errorhandler(`Не удалось найти статус, чтобы поставить лайк.`);
 					break;
+				case "explore":
+					errorhandler(`Не нашел кнопку след рекомендации.`);
+					break;
 				case "searchavatar":
-					errorhandler(`Не удалось найти официальные аватарки.`);
+					storage.get(['attempts', 'stages'], res => {
+						if(res.attempts < 3)
+						{
+							res.stages.push('SetupCommunityAvatar');
+							res.attempts++;
+							storage.set(res);
+						}
+						else errorhandler(`Не удалось найти официальные аватарки.`);
+					});
+					break;
+				case "ava":
+					storage.get(['attempts', 'stages'], res => {
+						if(res.attempts < 3)
+						{
+							res.stages.push('SetupCommunityAvatar');
+							res.attempts++;
+							storage.set(res);
+						}
+						else errorhandler(`Не удалось установить аватар.`);
+					});
 					break;
 				case "searchbages":
 					errorhandler(`Не удалось получить информацию по значкам.`, true);
@@ -141,6 +162,9 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 					break;
 				case "badge":
 					errorhandler(`Не удалось установить значок.`);
+					break;
+				case "background":
+					errorhandler(`Не удалось найти фоны профиля`);
 					break;
 				case "summary":
 					errorhandler(`Не удалось установить информацию о себе.`);
@@ -173,16 +197,16 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 					errorhandler(`Не удалось получить sessionid, возможно вы не авторизованы!`, true);
 					break;
 			}
-			//queue();
+			queue();
 			break;
 		case "bages":
-			let needs = ["ViewBroadcast", "SubscribeToWorkshopItem", "UseDiscoveryQueue", "RateUpContentInActivityFeed", "AddItemToWishlist", "JoinGroup", "SetupCommunityRealName", "SearchInDiscussions", "FeatureBadgeOnProfile", "SetupCommunityAvatar"];
+			let needs = ["ViewBroadcast", "SubscribeToWorkshopItem", "UseDiscoveryQueue", "RateUpContentInActivityFeed", "AddItemToWishlist", "JoinGroup", "SetupCommunityRealName", "SearchInDiscussions", "FeatureBadgeOnProfile"];
 			let arr = [];
 			let profile = [];
 			let profilearr = ["AddSummary", "MainGroup"];
 			for(var el in req.bages)
 			{
-				req.bages[el] = true;
+				//req.bages[el] = true;
 				if(needs.includes(el) && req.bages[el])
 				{
 					if(el == "SetupCommunityRealName" || el == "FeatureBadgeOnProfile")
@@ -191,12 +215,12 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 				}
 			}
 			//profilearr = ["FeatureBadgeOnProfile", "SetupCommunityRealName"];
-			arr.push("ProfileEdit", "Privacy");
+			arr.push("SetupCommunityAvatar", "ProfileEdit", "Privacy", "Level");
 			storage.get(["stages", "mode"], res => {
 				if(res.mode != 3)
 					arr.push('Chat');
 				console.log(arr.concat(res.stages));
-				storage.set({stages: arr.concat(res.stages), stage: 0, profilearr: profilearr}, queue);
+				storage.set({stages: arr.concat(res.stages), stage: 0, profilearr: profilearr, level: 5}, queue);
 			})
 			break;
 		case "start":
@@ -206,7 +230,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 					{
 						// Начать заново
 						window.working = true;
-						storage.set({mode: req.mode, stage: 0, stages: []});
+						storage.set({mode: req.mode, stage: 0, stages: [], attempts: 0});
 						if(req.mode == 3)
 						{
 							let stages = [];

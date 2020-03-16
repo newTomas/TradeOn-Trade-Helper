@@ -51,10 +51,10 @@ function LevelUp()
 
 function start()
 {
-	// storage.get(["current"], res => {
-	// 	if(res.current == "levelup")
-	// 		LevelUp();
-	// });
+	storage.get(["current"], res => {
+		if(res.current == "levelup")
+			LevelUp();
+	});
 }
 
 window.addEventListener("load", start, false);
