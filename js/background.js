@@ -15,6 +15,8 @@ chrome.runtime.onInstalled.addListener(function() {
 		errors: [],
 		stages: [],
 		attempts: 0,
+		accepttrades: true,
+		accepttimer: 10,
 		custom: {
 			base: false,
 			gets: false,
@@ -269,6 +271,6 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 	}
 });
 
-chrome.browserAction.onClicked.addListener((tab) => {
-	chrome.tabs.create({url: 'popup.html'});
-})
+// chrome.browserAction.onClicked.addListener((tab) => {
+// 	chrome.tabs.create({url: 'popup.html'});
+// })

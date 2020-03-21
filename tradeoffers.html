@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html style="width: 300px; height: 400px;">
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="js/jquery-3.4.1.min.js"></script>
+		<link href="/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+	</head>
+	<body class="grid">
+		<header class="grid">
+			<div class="header grid">
+				<div class="logo">
+
+				</div>
+				<div class="links grid">
+					<div class="group grid">
+						<a href="https://vk.com/tradeon" target="_blank" class="button">Группа</a>
+					</div>
+					<div class="site grid">
+						<a href="http://tradeon.store/" target="_blank" class="button">Сайт</a>
+					</div>
+				</div>
+			</div>
+			<div class="tabs grid">
+				<div class="grid">
+					<a href="popup.html" class="button">Настройка профиля</a>
+				</div>
+				<div class="grid">
+					<a href="#" class="button">Soon</a>
+				</div>
+				<div class="grid">
+					<a href="info.html" class="button">Информация</a>
+				</div>
+			</div>
+		</header>
+		<article class="grid">
+			<div class="grid horizontal2">
+				<p class="grid articletext">Включить автоматический прием входящих трейдов без потерь</p>
+				<label class="switch">
+					<input type="checkbox" id="tradesswitch">
+					<span class="slider round"></span>
+				</label>
+				<i class="grid oneinrow articletext fas fa-caret-down fa-2x"></i>
+				<div class="grid oneinrow hidden droplist">
+					<div class="grid horizontal2">
+						<p class="grid">Период проверки, от 5 до 1800 сек</p>
+						<input type="number" min="5" max="1800" id="period">
+					</div>
+				</div>
+			</div>
+		</article>
+		<footer class="grid">
+			<div class="ott grid">steam api key: <input type="text" readonly id="steamapi"></div>
+			<div class="ott grid">tm api key: <input type="text" readonly id="tmapi"></div>
+			<div class="ott grid">steam id: <input type="text" readonly id="steamid"></div>
+			<div class="ott grid">treade link: <input type="text" readonly id="tradelink"></div>
+			<div class="grid"><textarea readonly id="errorlog" style="resize: none;"></textarea></div>
+		</footer>
+		<script src="js/library.js"></script>
+		<script src="js/offerssettings.js"></script>
+	</body>
+</html>
