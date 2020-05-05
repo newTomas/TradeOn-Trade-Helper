@@ -10,32 +10,40 @@ chrome.runtime.onInstalled.addListener(function() {
 		needAuth: false,
 		profileEdited: false,
 		stage: 0,
+		lvlup: 1,
 		current: null,
 		mode: null,
 		errors: [],
 		stages: [],
 		attempts: 0,
-		accepttrades: true,
-		accepttimer: 10,
+		accepttrades: false,
+		accepttimer: 30,
+		tradeapi: false,
 		custom: {
 			base: false,
 			gets: false,
 			online: false
 		},
 		customsettings: {
+			lvlup: 1,
 			steamapiid: true,
 			tmapi: true,
 			tradelink: true,
 			group: null,
+			groupon: false,
 			name: null,
-			info: null
+			nameon: false,
+			info: null,
+			infoon: false
 		}
 	}, () => {});
 });
 
 window.queue = queue = () => {
 	storage.set({current: null});
-	storage.get(['mode', 'stage', 'stages'], (res) => {
+	storage.get(['mode', 'stage', 'stages', 'current'], (res) => {
+		if(res.stages[res.stage - 1] == "getSteamApiSteamId")
+			gettingapi = false;
 		if(!working)
 			storage.set({
 				mode: null,
@@ -87,10 +95,10 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 			switch(req.type)
 			{
 				case "cardcheck":
-					errorhandler(`Не удалось получить информацию по карточке ${req.data}. Код ошибки: ${req.errorcode}.`);
+					errorhandler(`Не удалось получить информацию по карточке ${req.data}. Код ошибки: ${req.errorcode}.`, true);
 					break;
 				case "cardbuy":
-					errorhandler(`Не удалось выставить ордер на покупку карточки ${req.data}. Код ошибки: ${req.errorcode}.`);
+					errorhandler(`Не удалось выставить ордер на покупку карточки ${req.data}. Код ошибки: ${req.errorcode}.`, true);
 					break;
 				case "ordercheck":
 					errorhandler(`Не удалось проверить ордер на покупку карточки ${req.data}. Код ошибки: ${req.errorcode}.`);
@@ -202,27 +210,27 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 			queue();
 			break;
 		case "bages":
-			let needs = ["ViewBroadcast", "SubscribeToWorkshopItem", "UseDiscoveryQueue", "RateUpContentInActivityFeed", "AddItemToWishlist", "JoinGroup", "SetupCommunityRealName", "SearchInDiscussions", "FeatureBadgeOnProfile"];
+			// Вырезано: UseDiscoveryQueue
+			let needs = ["ViewBroadcast", "SubscribeToWorkshopItem", "RateUpContentInActivityFeed", "AddItemToWishlist", "JoinGroup", "SearchInDiscussions", "FeatureBadgeOnProfile"];
 			let arr = [];
 			let profile = [];
-			let profilearr = ["AddSummary", "MainGroup"];
+			let profilearr = ["AddSummary", "MainGroup", "SetupCommunityRealName"];
 			for(var el in req.bages)
 			{
 				//req.bages[el] = true;
 				if(needs.includes(el) && req.bages[el])
 				{
-					if(el == "SetupCommunityRealName" || el == "FeatureBadgeOnProfile")
+					if(el == "FeatureBadgeOnProfile")
 						profilearr.push(el);
 					else arr.push(el);
 				}
 			}
-			//profilearr = ["FeatureBadgeOnProfile", "SetupCommunityRealName"];
-			arr.push("SetupCommunityAvatar", "ProfileEdit", "Privacy", "Level");
+			//arr.push("SetupCommunityAvatar", "ProfileEdit", "Privacy");
+			//arr.push("AddItemToWishlist");
 			storage.get(["stages", "mode"], res => {
-				if(res.mode != 3)
-					arr.push('Chat');
+				arr.push('Chat');
 				console.log(arr.concat(res.stages));
-				storage.set({stages: arr.concat(res.stages), stage: 0, profilearr: profilearr, level: 5}, queue);
+				storage.set({stages: arr.concat(res.stages), stage: 0, profilearr: profilearr}, queue);
 			})
 			break;
 		case "start":
@@ -233,32 +241,43 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 						// Начать заново
 						window.working = true;
 						storage.set({mode: req.mode, stage: 0, stages: [], attempts: 0});
-						if(req.mode == 3)
+
+						let stages = [];
+
+						if(req.mode == 5)
 						{
-							let stages = [];
-							if(res.custom.gets)
-							{
-								if(res.customsettings.steamapiid)
-									stages.push('getSteamApiSteamId');
-								if(res.customsettings.tradelink)
-									stages.push('getTradeLink');
-								if(res.customsettings.tmapi)
-									stages.push('marketAuth');
-							}
-							if(res.custom.online)
-								stages.push('Chat');
+							if(res.customsettings.steamapiid)
+								stages.push('getSteamApiSteamId');
+							if(res.customsettings.tradelink)
+								stages.push('getTradeLink');
+							if(res.customsettings.tmapi)
+								stages.push('marketAuth');
+							if(res.customsettings.lvlup > 1)
+								stages.push('Level');
 							storage.set({stages: stages});
-							if(res.custom.base)
-								checkprofile();
-							else queue();
+							checkprofile();
+							return;
 						}
-						else
+
+						if(req.mode % 2 == 0)
 						{
-							if(req.mode == 0 || req.mode == 2)
-								storage.set({stages: ["getSteamApiSteamId", "getTradeLink", "marketAuth"]});
+							stages.push("getSteamApiSteamId", "getTradeLink", "marketAuth");
+						}
+						
+						if(req.mode < 4)
+						{
 							if(req.mode < 2)
-								checkprofile();
-							else queue();
+							{
+								storage.set({lvlup: 7});
+								stages.push('Level');
+							}
+							else storage.set({lvlup: 1});
+							storage.set({stages: stages});
+							checkprofile();
+						} else
+						{
+							storage.set({stages: stages});
+							queue();
 						}
 					} else
 					{
@@ -271,6 +290,104 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 	}
 });
 
-// chrome.browserAction.onClicked.addListener((tab) => {
-// 	chrome.tabs.create({url: 'popup.html'});
-// })
+var gettingapi = false;
+
+function hookerAPI(details)
+{
+	if(details.type != "xmlhttprequest" && !gettingapi)
+		return;
+	for(var n in details.requestHeaders){
+		if(details.requestHeaders[n].name == "Accept-Language"){
+			details.requestHeaders[n].value = 'en-US;q=0.8,en;q=0.7';
+			break;
+		}
+	}
+	return {requestHeaders:details.requestHeaders};
+}
+
+function hookerHeaders(details)
+{
+	if(details.type != "xmlhttprequest")
+		return;
+	for(var n in details.requestHeaders){
+		if(details.requestHeaders[n].name == "Cookie"){
+			details.requestHeaders[n].value = '';
+		}
+		if(details.requestHeaders[n].name == "Accept-Language"){
+			details.requestHeaders[n].value = 'en-US;q=0.8,en;q=0.7';
+		}
+	}
+	return {requestHeaders:details.requestHeaders};
+}
+
+function hookerTM(details)
+{
+	if(details.type != "xmlhttprequest")
+		return;
+	for(var n in details.requestHeaders){
+		if(details.requestHeaders[n].name == "Cookie"){
+			details.requestHeaders[n].value = details.requestHeaders[n].value.replace('_language=en', '_language=ru');
+			break;
+		}
+	}
+	console.log(details);
+	return {requestHeaders:details.requestHeaders};
+}
+
+function hookerBages(details)
+{
+	if(details.type != "xmlhttprequest")
+		return;
+	for(var n in details.requestHeaders){
+		if(details.requestHeaders[n].name == "Accept-Language"){
+			details.requestHeaders[n].value = 'ru,en;q=0.9,en-US;q=0.8,ru-RU;q=0.7';
+			break;
+		}
+	}
+	console.log(details);
+	return {requestHeaders:details.requestHeaders};
+}
+
+chrome.webRequest.onBeforeSendHeaders.addListener(hookerBages,
+	{
+		urls:["https://steamcommunity.com/profiles/*/ajaxcraftbadge/", "https://steamcommunity.com/id/*/ajaxcraftbadge/"]
+	},
+	[
+		"requestHeaders",
+		"blocking",
+		"extraHeaders"
+	]);
+
+chrome.webRequest.onBeforeSendHeaders.addListener(hookerTM,
+{
+	urls:["https://market.csgo.com/docs"]
+},
+[
+	"requestHeaders",
+	"blocking",
+	"extraHeaders"
+]);
+
+chrome.webRequest.onBeforeSendHeaders.addListener(hookerHeaders,
+{
+	urls:["https://steamcommunity.com/groups/*"]
+},
+[
+	"requestHeaders",
+	"blocking",
+	"extraHeaders"
+]);
+
+chrome.webRequest.onBeforeSendHeaders.addListener(hookerAPI,
+{
+	urls:["https://steamcommunity.com/dev/apikey"]
+},
+[
+	"requestHeaders",
+	"blocking",
+	"extraHeaders"
+]);
+
+chrome.browserAction.onClicked.addListener((tab) => {
+	chrome.tabs.create({url: 'popup.html'});
+})

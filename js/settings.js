@@ -2,167 +2,215 @@ function start()
 {
 	const bg = chrome.extension.getBackgroundPage();
 
-	storage.get(['custom', 'steamapi', 'tmapi', 'steamid', 'tradelink', 'errors', 'customsettings'], (res) => {
-		jQuery('#steamapi').val(res.steamapi);
-		jQuery('#tmapi').val(res.tmapi);
-		jQuery('#steamid').val(res.steamid);
-		jQuery('#tradelink').val(res.tradelink);
-		
-		jQuery('#base').prop("checked", res.custom.base);
-		jQuery('#gets').prop("checked", res.custom.gets);
-		jQuery('#online').prop("checked", res.custom.online);
-		jQuery('#getsteamapiid').prop("checked", res.customsettings.steamapiid);
-		jQuery('#gettmapi').prop("checked", res.customsettings.tmapi);
-		jQuery('#gettradelink').prop("checked", res.customsettings.tradelink);
+	storage.get(['customsettings'], (res) => {
+		jQuery('.settingitem input[type=text]').eq(0).val(res.customsettings.group);
+		jQuery('.settingitem input[type=text]').eq(1).val(res.customsettings.name);
+		jQuery('.settingitem input[type=text]').eq(2).val(res.customsettings.info);
+		jQuery('#apisettings svg').eq(0).toggleClass('on', res.customsettings.steamapiid);
+		jQuery('#apisettings svg').eq(1).toggleClass('on', res.customsettings.tmapi);
+		jQuery('#apisettings svg').eq(2).toggleClass('on', res.customsettings.tradelink);
 
-		if(res.customsettings.group)
+		jQuery('#lvlup input').val(res.customsettings.lvlup);
+
+		if(res.customsettings.groupon)
 		{
-			jQuery('[name=group][value=specific]').prop("checked", true);
-			jQuery('#group').val(res.customsettings.group);
+			jQuery('input[name=group]').eq(1).prop("checked", true);
 		}
-		else jQuery('[name=group][value=random]').prop("checked", true);
+		else jQuery('input[name=group]').eq(0).prop("checked", true);
 
-		if(res.customsettings.name)
+		if(res.customsettings.nameon)
 		{
-			jQuery('[name=name][value=specific]').prop("checked", true);
-			jQuery('#name').val(res.customsettings.name);
+			jQuery('input[name=name]').eq(1).prop("checked", true);
 		}
-		else jQuery('[name=name][value=random]').prop("checked", true);
+		else jQuery('input[name=name]').eq(0).prop("checked", true);
 
-		if(res.customsettings.info)
+		if(res.customsettings.infoon)
 		{
-			jQuery('[name=info][value=specific]').prop("checked", true);
-			jQuery('#info').val(res.customsettings.info);
+			jQuery('input[name=info]').eq(1).prop("checked", true);
 		}
-		else jQuery('[name=info][value=random]').prop("checked", true);
-
-		jQuery('#errorlog').val(res.errors.join('\n'));
+		else jQuery('input[name=info]').eq(0).prop("checked", true);
 	});
 
-	chrome.storage.onChanged.addListener(function(changes, namespace) {
-		console.log(changes);
-		for(var key in changes)
+	// chrome.storage.onChanged.addListener(function(changes, namespace) {
+	// 	console.log(changes);
+	// 	for(var key in changes)
+	// 	{
+	// 		switch(key)
+	// 		{
+	// 			case "customsettings":
+	// 				// jQuery('.settingitem input[type=text]').eq(0).val(changes[key].newValue.group);
+	// 				// jQuery('.settingitem input[type=text]').eq(1).val(changes[key].newValue.name);
+	// 				// jQuery('.settingitem input[type=text]').eq(2).val(changes[key].newValue.info);
+	// 				// jQuery('#apisettings svg').eq(0).toggleClass('on', changes[key].newValue.steamapiid);
+	// 				// jQuery('#apisettings svg').eq(1).toggleClass('on', changes[key].newValue.tmapi);
+	// 				// jQuery('#apisettings svg').eq(2).toggleClass('on', changes[key].newValue.tradelink);
+
+	// 				// jQuery('#lvlup input').val(changes[key].newValue.lvlup);
+
+	// 				// if(changes[key].newValue.groupon)
+	// 				// {
+	// 				// 	jQuery('[name=group]').eq(1).prop("checked", true);
+	// 				// }
+	// 				// else jQuery('[name=group]').eq(0).prop("checked", true);
+
+	// 				// if(changes[key].newValue.nameon)
+	// 				// {
+	// 				// 	jQuery('[name=name]').eq(1).prop("checked", true);
+	// 				// }
+	// 				// else jQuery('[name=name]').eq(0).prop("checked", true);
+
+	// 				// if(changes[key].newValue.infoon)
+	// 				// {
+	// 				// 	jQuery('[name=info]').eq(1).prop("checked", true);
+	// 				// }
+	// 				// else jQuery('[name=info]').eq(0).prop("checked", true);
+	// 				break;
+	// 		}
+	// 	}
+	// });
+
+	jQuery('#profilesettings input[type=radio][name=group]').change(e => {
+		if(!jQuery('input[type=text][name=group]').val() && e.target.value == "on")
 		{
-			switch(key)
-			{
-				case "steamapi":
-					document.getElementById('steamapi').value = changes[key].newValue;
-					break;
-				case "tmapi":
-					document.getElementById('tmapi').value = changes[key].newValue;
-					break;
-				case "steamid":
-					document.getElementById('steamid').value = changes[key].newValue;
-					break;
-				case "tradelink":
-					document.getElementById('tradelink').value = changes[key].newValue;
-					break;
-				case "errors":
-					jQuery('#errorlog').val(changes[key].newValue.join('\n'));
-					break;
-				case "custom":
-					jQuery('#base').prop("checked", changes[key].newValue.base);
-					jQuery('#gets').prop("checked", changes[key].newValue.gets);
-					jQuery('#online').prop("checked", changes[key].newValue.online);
-					break;
-				case "customsettings":
-					jQuery('#getsteamapiid').prop("checked", changes[key].newValue.steamapiid);
-					jQuery('#gettmapi').prop("checked", changes[key].newValue.tmapi);
-					jQuery('#gettradelink').prop("checked", changes[key].newValue.tradelink);
-					break;
-			}
-		}
-	});
-
-	jQuery('#gets').change((e) => {
-		storage.get(['custom', 'customsettings'], (res) => {
-			if(e.target.checked && !Object.values(res.customsettings).includes(true))
-			{
-				res.customsettings.steamapiid = true;
-				res.customsettings.tmapi = true;
-				res.customsettings.tradelink = true;
-			}
-			res.custom[e.target.id] = e.target.checked;
-			storage.set(res);
-		});
-	});
-
-	jQuery('#base, #online').change((e) => {
-		storage.get(['custom'], (res) => {
-			res.custom[e.target.id] = e.target.checked;
-			storage.set(res);
-		});
-	});
-
-	jQuery('#getsteamapiid, #gettmapi, #gettradelink').change((e) => {
-		storage.get(['custom', 'customsettings'], (res) => {
-			res.customsettings[e.target.name] = e.target.checked;
-			if(!Object.values(res.customsettings).includes(true))
-				res.custom.gets = false;
-			storage.set(res);
-		});
-	});
-
-	jQuery('.fa-caret-down, .fa-caret-up').click((e) => {
-		jQuery(e.originalEvent.path[1]).find('div.droplist').toggleClass('hidden');
-		jQuery(e.target).toggleClass('fa-caret-down');
-		jQuery(e.target).toggleClass('fa-caret-up');
-	});
-
-	jQuery('#group').blur((e) => {
-		const regex = new RegExp('(http|https):\/\/steamcommunity\.com\/groups\/(.+)');
-		if(!regex.test(jQuery('#group').val()))
-		{
-			jQuery('[name=group][value=random]').prop("checked", true);
-			storage.get(["customsettings"], (res) => {
-				res.customsettings.group = null;
-				storage.set(res);
-			});
+			//jQuery('#profilesettings input[name=group][value=off]').prop('checked', true);
+			jQuery('#profilesettings input[name=group][type=text]').addClass('wrong');
 			return false;
 		}
-		if(jQuery(`[name=group][value=specific]`).prop('checked'))
-			storage.get(['customsettings'], res => {
-				res.customsettings.group = jQuery('#group').val();
-				storage.set(res);
-			});
+		if(e.target.value == "off")
+			jQuery('#profilesettings input[name=group][type=text]').removeClass('wrong');
+		storage.get(['customsettings'], res => {
+			res.customsettings.groupon = (e.target.value == "on");
+			storage.set(res);
+		});
 	});
 
-	jQuery('#name, #info').blur(e => {
-		if(jQuery(`[name=${e.target.id}][value=specific]`).prop('checked'))
-			storage.get(['customsettings'], res => {
-				res.customsettings[e.target.id] = e.target.value;
-				storage.set(res);
-			});
-	});
-
-	jQuery('[name=group][value=specific]').click((e) => {
-		const regex = new RegExp('(http|https):\/\/steamcommunity\.com\/groups\/(.+)');
-		if(!regex.test(jQuery('#group').val()))
+	jQuery('#profilesettings input[type=radio][name=name]').change(e => {
+		if(!jQuery('input[type=text][name=name]').val())
+		{
+			//jQuery('#profilesettings input[name=name][value=off]').prop('checked', true);
+			jQuery('#profilesettings input[name=name][type=text]').addClass('wrong');
 			return false;
+		}
 		storage.get(['customsettings'], res => {
-			res.customsettings.group = jQuery('#group').val();
-			storage.set(res);
-		});
-	});
-	
-	jQuery('input[value=random]').click(e => {
-		storage.get(['customsettings'], (res) => {
-			res.customsettings[e.target.name] = null;
+			res.customsettings.nameon = (e.target.value == "on");
 			storage.set(res);
 		});
 	});
 
-	jQuery('[name=name][value=specific], [name=info][value=specific]').click(e => {
+	jQuery('#profilesettings input[type=radio][name=info]').change(e => {
+		if(!jQuery('input[type=text][name=info]').val())
+		{
+			//jQuery('#profilesettings input[name=info][value=off]').prop('checked', true);
+			jQuery('#profilesettings input[name=info][type=text]').addClass('wrong');
+			return false;
+		}
 		storage.get(['customsettings'], res => {
-			res.customsettings[e.target.name] = jQuery(`#${e.target.name}`).val();
+			res.customsettings.infoon = (e.target.value == "on");
 			storage.set(res);
 		});
 	});
 
-	jQuery("footer input").on("click", function() {
-		this.select();
-		document.execCommand('copy');
+	jQuery('input[type=text][name=group]').change(e => {
+		storage.get(['customsettings'], res => {
+			let regex = /^(http|https):\/\/steamcommunity\.com\/groups\/.+/;
+			if(e.target.value && !regex.test(e.target.value))
+			{
+				e.target.value = res.customsettings.group;
+				return;
+			}
+			res.customsettings.group = e.target.value;
+			if(!e.target.value)
+				res.customsettings.groupon = false;
+			else if(jQuery('#profilesettings input[name=group][value=on]').prop('checked'))
+			{
+				res.customsettings.groupon = true;
+			}
+			jQuery('#profilesettings input[name=group][type=text]').removeClass('wrong');
+			storage.set(res);
+		});
 	});
+
+	jQuery('input[type=text][name=name]').change(e => {
+		storage.get(['customsettings'], res => {
+			res.customsettings.name = e.target.value;
+			if(!e.target.value)
+				res.customsettings.nameon = false;
+			else if(jQuery('#profilesettings input[name=name][value=on]').prop('checked'))
+			{
+				res.customsettings.nameon = true;
+			}
+			jQuery('#profilesettings input[name=name][type=text]').removeClass('wrong');
+			storage.set(res);
+		});
+	});
+
+	jQuery('input[type=text][name=info]').change(e => {
+		storage.get(['customsettings'], res => {
+			res.customsettings.info = e.target.value;
+			if(!e.target.value)
+				res.customsettings.infoon = false;
+			else if(jQuery('#profilesettings input[name=info][value=on]').prop('checked'))
+			{
+				res.customsettings.infoon = true;
+			}
+			jQuery('#profilesettings input[name=info][type=text]').removeClass('wrong');
+			storage.set(res);
+		});
+	});
+
+	jQuery('#apisettings .powersvg').eq(0).on('click', e => {
+		var target = jQuery('#apisettings .powersvg').eq(0);
+		target.toggleClass('on');
+		storage.get(['customsettings'], res => {
+			res.customsettings.steamapiid = target.hasClass('on');
+			storage.set(res);
+		});
+	});
+
+	jQuery('#apisettings .powersvg').eq(1).on('click', e => {
+		var target = jQuery('#apisettings .powersvg').eq(1);
+		target.toggleClass('on');
+		storage.get(['customsettings'], res => {
+			res.customsettings.tmapi = target.hasClass('on');
+			storage.set(res);
+		});
+	});
+
+	jQuery('#apisettings .powersvg').eq(2).on('click', e => {
+		var target = jQuery('#apisettings .powersvg').eq(2);
+		target.toggleClass('on');
+		storage.get(['customsettings'], res => {
+			res.customsettings.tradelink = target.hasClass('on');
+			storage.set(res);
+		});
+	});
+
+	jQuery('#lvlup input').change(e => {
+		var num = parseInt(e.target.value);
+		storage.get('customsettings', res => {
+			if(num < 1 || num > 7)
+			{
+				e.target.value = res.customsettings.lvlup;
+			}
+			else
+			{
+				res.customsettings.lvlup = num;
+				storage.set(res);
+			}
+		});
+	});
+
+	jQuery('.infosvg').on('click', e => {
+		jQuery(e.target.parentElement).find('.infocontent').show();
+		jQuery(e.target.parentElement).find('.exit').show();
+	});
+
+	jQuery('.exit').on('click', e => {
+		console.log(e);
+		jQuery(e.target.parentElement).find('.infocontent').hide();
+		jQuery(e.target.parentElement).find('.exit').hide();
+	});
+
 }
 
 window.addEventListener("load", start, false);

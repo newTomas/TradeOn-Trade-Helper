@@ -1,9 +1,9 @@
 {
 	"manifest_version": 2,
-	"name": "TradeOn RUN-UP",
-	"description": "Скрипт для первоначальной настройки профиля стим перед использованием ботов-трейдеров.",
-	"version": "0.9.9",
-	"permissions": ["https://steamcommunity.com/*", "https://*.steampowered.com/*", "https://steamladder.com/ladder/groups/", "https://market.csgo.com/*", "storage", "tabs", "webRequest", "webRequestBlocking"],
+	"name": "TradeOn Trader Helper",
+	"description": "Расширение для оформления и оживления профиля, получения данных для интеграции в бота, а также автоматического приема входящих обменов. От команды TradeOn.",
+	"version": "1.0.0",
+	"permissions": ["https://steamcommunity.com/*", "https://*.steampowered.com/*", "https://steamladder.com/ladder/groups/", "https://market.csgo.com/*", "storage", "unlimitedStorage", "tabs", "webRequest", "webRequestBlocking"],
 	"background": {
 		"scripts": ["js/jquery-3.4.1.min.js", "js/library.js", "js/consts.js", "js/background.js", "js/tradeoffers.js"],
 		"persistent": true
@@ -76,6 +76,10 @@
 	{
 		"matches": ["https://steamcommunity.com/discussions/"],
 		"js": ["js/jquery-3.4.1.min.js", "js/consts.js", "js/library.js", "js/scripts/discussions.js"]
+	},
+	{
+		"matches": ["https://steamcommunity.com/ogg/*/Avatar/Preview/*"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/wrongavatar.js"]
 	},
 	{
 		"matches": ["https://steamcommunity.com/actions/GameAvatars/"],

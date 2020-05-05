@@ -56,7 +56,7 @@ async function SetupCommunityRealName()
 	}
 	storage.get(["customsettings", "mode"], res => {
 		let name;
-		if(res.mode == 3 && res.customsettings.name)
+		if(res.mode == 5 && res.customsettings.nameon && res.customsettings.name)
 			name = res.customsettings.name;
 		else name = topnames[Math.round(Math.random()*199)];
 
@@ -86,7 +86,7 @@ async function AddSummary()
 	}
 	storage.get(["customsettings", "mode"], res => {
 		let summary;
-		if(res.mode == 3 && res.customsettings.info)
+		if(res.mode == 5 && res.customsettings.infoon && res.customsettings.info)
 			summary = res.customsettings.info;
 		else summary = topWords[Math.round(Math.random() * (topWords.length - 1))];
 

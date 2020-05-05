@@ -8,14 +8,14 @@ function getSteamApiSteamId2()
 		});
 	else switch(jQuery('#bodyContents_ex h2')[0].textContent)
 	{
-		case "Ваш ключ Steam Web API":
+		case "Your Steam Web API Key":
 			storage.set({
 				steamapi: jQuery('#bodyContents_ex p:first')[0].textContent.split(' ')[1],
 				steamid: steamid
 			});
 			chrome.runtime.sendMessage({action: "queue"});
 			break;
-		case "Зарегистрировать новый ключ Steam Web API":
+		case "Register for a new Steam Web API Key":
 			jQuery.ajax({
 				method: "POST",
 				url: "https://steamcommunity.com/dev/registerkey",
@@ -27,6 +27,7 @@ function getSteamApiSteamId2()
 				}
 			})
 			.done(function( msg ) {
+				console.log(msg);
 				var html = jQuery.parseHTML(msg);
 				storage.set({
 					steamapi: jQuery(html).find('#bodyContents_ex p:first')[0].textContent.split(' ')[1],

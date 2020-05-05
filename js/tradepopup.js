@@ -2,25 +2,19 @@ function start()
 {
 	const bg = chrome.extension.getBackgroundPage();
 
-	const modes = ['7lvlwith', '7lvl', '1lvlwith', '1lvl', 'with', 'custom'];
-
-	var stages = 0;
-
-	function setProgress(stage)
-	{
-		jQuery('progress').val(Math.round(stage / stages * 100));
-	}
-
-	storage.get(['steamapi', 'tmapi', 'steamid', 'tradelink', 'mode', 'stage', 'stages'], (res) => {
+	storage.get(['steamapi', 'tmapi', 'steamid', 'tradelink', 'accepttrades', 'tradeapi', 'accepttimer'], (res) => {
 		jQuery('#steamapi').val(res.steamapi);
 		jQuery('#tmapi').val(res.tmapi);
 		jQuery('#steamid').val(res.steamid);
 		jQuery('#tradelink').val(res.tradelink);
+		jQuery('#bigpower').toggleClass('on', res.accepttrades);
+		if(res.tradeapi)
+			jQuery('#withapi').addClass('active');
+		else jQuery('#withoutapi').addClass('active')
+		jQuery('#period input').val(res.accepttimer);
 		if(bg.working)
 		{
 			jQuery(`#${modes[res.mode]} svg.powersvg`).addClass('on');
-			stages = res.stages.length;
-			setProgress(res.stage);
 		} else if(res.mode)
 		{
 			console.log('Выполнение скрипта было прервано!');
@@ -46,46 +40,44 @@ function start()
 				case "tradelink":
 					jQuery('#tradelink').val(changes[key].newValue);
 					break;
-				case "mode":
-					if(bg.working)
-						jQuery(`#${modes[changes[key].newValue]} svg.powersvg`).addClass('on');
-					else
-						jQuery(`#${modes[changes[key].oldValue]} svg.powersvg`).removeClass('on');
+				case "accepttrades":
+					jQuery('#bigpower').toggleClass('on', changes[key].newValue);
 					break;
-				case "stage":
-					setProgress(changes[key].newValue);
+				case "tradeapi":
+					jQuery('#withapi').toggleClass('active', changes[key].newValue);
+					jQuery('#withoutapi').toggleClass('active', !changes[key].newValue);
 					break;
-				case "stages":
-					stages = changes[key].newValue.length;
+				case "accepttimer":
+					jQuery('#period input').val(changes[key].newValue);
 					break;
 			}
 		}
 	});
 
-	jQuery('#' + modes.join(' .powersvg,#') + ' .powersvg').on('click', e => {
-		var p = jQuery(e.currentTarget.parentElement);
-		var el = jQuery(e.currentTarget);
-		if(bg.working)
-		{
-			if(!el.hasClass('on'))
-				return;
-			el.removeClass('on');
-			chrome.runtime.sendMessage({
-				action: "stop"
-			});
+	jQuery('#bigpower').on('click', e => {
+		storage.set({accepttrades: !jQuery(e.currentTarget).hasClass('on')});
+	});
+
+	jQuery('#withoutapi').on('click', e => {
+		if(!jQuery(e.currentTarget).hasClass('active')){
+			storage.set({tradeapi: false});
 		}
-		else
-		{
-			if(modes.indexOf(p.attr('id')) != -1)
-			{
-				el.addClass('on');
-				chrome.runtime.sendMessage({
-					action: "start",
-					mode: modes.indexOf(p.attr('id')),
-					continue: false
-				});
-			}
+	});
+
+	jQuery('#withapi').on('click', e => {
+		if(!jQuery(e.currentTarget).hasClass('active')){
+			storage.set({tradeapi: true});
 		}
+	});
+
+	jQuery('#period input').on('change', e => {
+		var num = parseInt(jQuery(e.currentTarget).val());
+		if(num >= 30 && num <= 1800)
+		{
+			storage.set({accepttimer: num});
+		} else storage.get(['accepttimer'], res => {
+			e.currentTarget.value = res.accepttimer;
+		});
 	});
 
 	jQuery('.switcher').on('click', e => {

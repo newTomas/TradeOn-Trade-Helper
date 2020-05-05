@@ -57,19 +57,45 @@ function runWishlist()
 	chrome.runtime.sendMessage({action: "queue"});
 }
 
-function start()
+function waitWishButton()
 {
-	storage.get(["current"], res => {
-		if(res.current == "discovery")
-			loaded = true;
-		else if(res.current == "wishlist")
-			runWishlist();
-	});
+	if(loaded)
+	{
+		runWishlist();
+		return;
+	}
+	
+	if(jQuery('#app_agegate').length == 0 && jQuery('#add_to_wishlist_area').children().length == 0)
+	{
+		setTimeout(waitWishButton, 100);
+		return;
+	}
+
+	runWishlist();
 }
 
-window.addEventListener("load", start, false);
+// function start()
+// {
+// 	storage.get(["current"], res => {
+// 		if(res.current == "discovery")
+// 			loaded = true;
+// 		else if(res.current == "wishlist")
+// 			runWishlist();
+// 	});
+// }
+
+// window.addEventListener("load", start, false);
 
 storage.get(["current"], res => {
-	if(res.current == "discovery")
-		waitNextButton();
+	switch(res.current)
+	{
+		case "discovery":
+			waitNextButton();
+			window.addEventListener("load", () => {loaded = true}, false);
+			break;
+		case "wishlist":
+			waitWishButton();
+			window.addEventListener("load", () => {loaded = true}, false);
+			break;
+	}
 });

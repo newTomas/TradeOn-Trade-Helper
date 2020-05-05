@@ -29,6 +29,7 @@ function marketAuth()
 				}
 			})
 			.done(function( msg ) {
+				console.log(csrf);
 				if(msg.result)
 					jQuery.ajax({
 						method: 'POST',

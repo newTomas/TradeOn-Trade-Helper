@@ -39,6 +39,7 @@ function getSessionid()
 
 async function getSteamApiSteamId()
 {
+	gettingapi = true;
 	storage.set({current: "steamapi"});
 	if(curtab)
 		chrome.tabs.update(curtab, {url: 'https://steamcommunity.com/dev/apikey'}, tab => {
@@ -52,13 +53,15 @@ async function getSteamApiSteamId()
 async function getTradeLink()
 {
 	storage.set({current: "tradelink"});
-	if(curtab)
-		chrome.tabs.update(curtab, {url: 'https://steamcommunity.com/id/me/tradeoffers/privacy'}, tab => {
+	storage.get(["steamid"], res => {
+		if(curtab)
+			chrome.tabs.update(curtab, {url: `https://steamcommunity.com/profiles/${res.steamid}/tradeoffers/privacy`}, tab => {
+				curtab = tab.id;
+			});
+		else chrome.tabs.create({url: `https://steamcommunity.com/profiles/${res.steamid}/tradeoffers/privacy`, active: false}, (tab) => {
 			curtab = tab.id;
 		});
-	else chrome.tabs.create({url: 'https://steamcommunity.com/id/me/tradeoffers/privacy', active: false}, (tab) => {
-		curtab = tab.id;
-	});
+	})
 }
 
 async function marketAuth()
@@ -146,9 +149,9 @@ async function JoinGroup()
 	storage.set({current: "group"});
 	storage.get(['customsettings', 'mode'], res => {
 		let group;
-		if(res.mode == 3 && res.customsettings.group)
+		if(res.mode == 5 && res.customsettings.groupon && res.customsettings.group)
 			group = res.customsettings.group;
-		else group = top100group[Math.round(Math.random()*99)];
+		else group = top100group[Math.round(Math.random()*(top100group.length - 1))];
 
 		if(curtab)
 			chrome.tabs.update(curtab, {url: group}, tab => {

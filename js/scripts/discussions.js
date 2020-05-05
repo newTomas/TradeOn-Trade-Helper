@@ -20,4 +20,5 @@ function start()
 	});
 }
 
-window.addEventListener("load", start, false);
+start();
+//window.addEventListener("load", start, false);

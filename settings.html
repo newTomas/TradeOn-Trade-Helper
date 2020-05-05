@@ -1,123 +1,178 @@
 <!DOCTYPE html>
-<html style="width: 300px; height: 400px;">
-	<head>
-		<meta charset="UTF-8">
-		<link rel="stylesheet" href="css/style.css">
-		<script src="js/jquery-3.4.1.min.js"></script>
-		<link href="/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
-	</head>
-	<body class="grid">
-		<header class="grid">
-			<div class="header grid">
-				<div class="logo">
-
-				</div>
-				<div class="links grid">
-					<div class="group grid">
-						<a href="https://vk.com/tradeon" target="_blank" class="button">Группа</a>
-					</div>
-					<div class="site grid">
-						<a href="http://tradeon.store/" target="_blank" class="button">Сайт</a>
-					</div>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="js/library.js"></script>
+	<script src="js/settings.js"></script>
+	<link rel="stylesheet" href="css/style.css">
+	<title>Document</title>
+</head>
+<body>
+	<svg style="display: none;" >
+		<symbol id="powericon" width="16" height="16" viewBox="0 0 16 16">
+			<path d="M8 0C3.58887 0 0 3.58887 0 8C0 12.4111 3.58887 16 8 16C12.4111 16 16 12.4111 16 8C16 3.58887 12.4111 0 8 0ZM7.33334 2.33334C7.33334 2.14909 7.48244 2 7.66669 2H8.33334C8.51759 2 8.66669 2.14909 8.66669 2.33334V7.66669C8.66669 7.85094 8.51759 8.00003 8.33334 8.00003H7.66669C7.48244 8.00003 7.33334 7.85094 7.33334 7.66669V2.33334ZM7.06066 12.5744C5.22987 12.2152 3.76097 10.7305 3.41747 8.89681C2.98606 6.59425 4.25928 4.51606 6.19119 3.70069C6.41591 3.60584 6.66666 3.76066 6.66666 4.00459V4.74491C6.66666 4.87028 6.59328 4.97984 6.48181 5.03719C5.40597 5.5905 4.66666 6.70931 4.66666 8C4.66666 10.073 6.56922 11.7104 8.71981 11.2575C10.0218 10.9833 11.0554 9.90172 11.2822 8.59059C11.5473 7.05797 10.7559 5.67447 9.51959 5.03794C9.40738 4.98016 9.33334 4.86947 9.33334 4.74325V4.00537C9.33334 3.76269 9.58284 3.60547 9.80653 3.69972C11.4849 4.40706 12.6667 6.06728 12.6667 8C12.6667 10.8804 10.0436 13.1596 7.06066 12.5744Z"/>
+		</symbol>
+	</svg>
+	<svg style="display: none;" width="14" height="14" viewBox="0 0 14 14" >
+		<symbol id="infoicon" width="14" height="14" viewBox="0 0 14 14">
+			<path d="M7.7003 6.30005H6.30029V10.5H7.7003V6.30005Z" fill="#5DDF97"/>
+			<path d="M6.99998 0C3.13251 0 0 3.13251 0 6.99998C0 10.8675 3.13251 14 6.99998 14C10.8675 14 14 10.8675 14 6.99998C14 3.13248 10.8675 0 6.99998 0ZM6.99998 12.6C3.91299 12.6 1.39998 10.087 1.39998 6.99998C1.39998 3.91299 3.91299 1.40001 6.99998 1.40001C10.087 1.40001 12.6 3.91299 12.6 6.99998C12.6 10.087 10.087 12.6 6.99998 12.6Z" fill="#5DDF97"/>
+			<path d="M7.7003 3.5H6.30029V4.90001H7.7003V3.5Z" fill="#5DDF97"/>
+		</symbol>
+	</svg>
+	<div class="fullwidth links">
+		<div id="vk">
+			<img src="svg/vk.svg" alt="">
+			<a href="https://vk.com/tradeon" target="_blank">VK.COM/TRADEON</a>
+		</div>
+		<div id="site">
+			<img src="svg/site.svg" alt="">
+			<a href="http://tradeon.store" target="_blank">TRADEON.STORE</a>
+		</div>
+	</div>
+	<div class="fullwidth logo"></div>
+	<div class="fullwidth tabs">
+		<div class="tab">
+			<a href="popup.html"><p>НАСТРОЙКА ПРОФИЛЯ</p></a>
+		</div>
+		<div class="tab">
+			<a href="tradeoffers.html"><p>АВТОПРИЕМ ОБМЕНОВ</p></a>
+		</div>
+		<div class="tab">
+			<a href="information.html"><p>ИНФОРМАЦИЯ</p></a>
+		</div>
+	</div>
+	<article class="fullwidth">
+		<div class="articleitem">
+			<div class="settingscontent" id="lvlup">
+				<p>Повысить до</p>
+				<input type="number" min="1" max="7">
+				<p>уровня</p>
+				<svg class="infosvg">
+					<use href="#infoicon"></use>
+				</svg>
+				<div class="exit">&#10006;</div>
+				<div class="infocontent">
+					При повышении уровня выше первого будут покупаться карточки steam с торговой площадки. На каждый уровень затраты составляют в районе 10 рублей steam баланса. Максимальный уровень автоматического повышения - 7 lvl.
 				</div>
 			</div>
-			<div class="tabs grid">
-				<div class="grid">
-					<a href="popup.html" class="button">Настройка профиля</a>
-				</div>
-				<div class="grid">
-					<a href="tradeoffers.html" class="button">Прием входящих обменов</a>
-				</div>
-				<div class="grid">
-					<a href="info.html" class="button">Информация</a>
-				</div>
-			</div>
-		</header>
-		<article class="grid">
-			<div class="grid horizontal2">
-				<p class="grid articletext">Получить 1 уровень (без затрат)</p>
-				<label class="switch">
-					<input type="checkbox" id="base">
-					<span class="slider round"></span>
-				</label>
-				<i class="grid oneinrow articletext fas fa-caret-down fa-2x"></i>
-				<div class="grid oneinrow hidden droplist">
-					<div class="grid horizontal4">
-						<input name="group" class="grid articletext" type="radio" value="random">
-						<p class="grid articletext">Вступление в случайную из топ 100 групп</p>
-						<input name="group" class="grid articletext" type="radio" value="specific">
-						<div class="grid vertical2">
-							<p class="grid">Вступление в заданную группу</p>
-							<input type="text" id="group">
+		</div>
+		<div class="fullwidth info">
+			<div class="acticleinfoitem">
+				<!-- <div class="switcher">
+					<svg class="open" width="10" height="6" viewBox="0 0 10 6" fill="none">
+						<path d="M1 5L5 2L9 5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					<svg class="close" width="10" height="6" viewBox="0 0 10 6" fill="none">
+						<path d="M9 1L5 4L1 0.999999" stroke="white" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+				</div> -->
+				<div class="name">Оформление профиля</div>
+				<div id="profilesettings">
+					<div class="settingitem">
+						<div class="subname">Группы</div>
+						<div class="select">
+							<label class="group">
+								<input type="radio" id="randomgroup" name="group" value="off">
+								<label for="randomgroup">Вступить в случайную</label>
+							</label>
+							<label class="group" for="specificgroup">
+								<input type="radio" id="specificgroup" name="group" value="on">
+								<input type="text" name="group" placeholder="Заданная группа">
+							</label>
+							<svg class="infosvg">
+								<use href="#infoicon"></use>
+							</svg>
+							<div class="exit">&#10006;</div>
+							<div class="infocontent">
+								Введите ссылку на группу вручную, чтобы профиль подписывался именно на неё. В автоматическом режиме профиль подпишется на случайную группу из топ 100 steam. Группа не должна быть приватной.
+								<br><br>
+								Ссылка должна быть введена целиком, в том числе "https://". Например : https://steamcommunity.com/groups/пример
+							</div>
 						</div>
 					</div>
-					<div class="grid horizontal4">
-						<input name="name" class="grid articletext" type="radio" value="random">
-						<p class="grid articletext">Установка случайного имени</p>
-						<input name="name" class="grid articletext" type="radio" value="specific">
-						<div class="grid vertical2">
-							<p class="grid">Установка заданного имени</p>
-							<input type="text" id="name">
+					<div class="settingitem">
+						<div class="subname">Имя</div>
+						<div class="select">
+							<label class="group">
+								<input type="radio" id="randomname" name="name" value="off">
+								<label for="randomname">Случайное имя</label>
+							</label>
+							<label class="group" for="specificname">
+								<input type="radio" id="specificname" name="name" value="on">
+								<input type="text" name="name" placeholder="Заданное имя">
+							</label>
+							<svg class="infosvg">
+								<use href="#infoicon"></use>
+							</svg>
+							<div class="exit">&#10006;</div>
+							<div class="infocontent">
+								Введите желаемое имя профиля (не никнейм). В автоматическом режиме профиль будет заполнен рандомным именем на английском языке.
+							</div>
 						</div>
 					</div>
-					<div class="grid horizontal4">
-						<input name="info" class="grid articletext" type="radio" value="random">
-						<p class="grid articletext">Случайная информация о себе</p>
-						<input name="info" class="grid articletext" type="radio" value="specific">
-						<div class="grid vertical2">
-							<p class="grid">Заданная информация о себе</p>
-							<input type="text" id="info">
+					<div class="settingitem">
+						<div class="subname">Информация</div>
+						<div class="select">
+							<label class="group">
+								<input type="radio" id="randominfo" name="info" value="off">
+								<label for="randominfo">Случайная информация</label>
+							</label>
+							<label class="group" for="specificinfo">
+								<input type="radio" id="specificinfo" name="info" value="on">
+								<input type="text" name="info" placeholder="Заданная информация">
+							</label>
+							<svg class="infosvg">
+								<use href="#infoicon"></use>
+							</svg>
+							<div class="exit">&#10006;</div>
+							<div class="infocontent">
+								Данный блок отвечает за заполнение информации в "информация о себе". Можете ввести желаемый текст, чтобы именно он появился в описании профиля. В автоматическом режиме профиль будет заполнен рандомными фразами на английском языке.
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="grid horizontal2">
-				<p class="grid articletext">Получить steamapi/tmapi/steamid/tradelink</p>
-				<label class="switch">
-					<input type="checkbox" id="gets">
-					<span class="slider round"></span>
-				</label>
-				<i class="grid oneinrow articletext fas fa-caret-down fa-2x"></i>
-				<div class="grid oneinrow hidden droplist">
-					<div class="grid horizontal2">
-						<p class="grid articletext">Получить steam api и steamid</p>
-						<label class="switch">
-							<input type="checkbox" id="getsteamapiid" name="steamapiid">
-							<span class="slider round"></span>
-						</label>
+			<div class="acticleinfoitem">
+				<!-- <div class="switcher">
+					<svg class="open" width="10" height="6" viewBox="0 0 10 6" fill="none">
+						<path d="M1 5L5 2L9 5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					<svg class="close" width="10" height="6" viewBox="0 0 10 6" fill="none">
+						<path d="M9 1L5 4L1 0.999999" stroke="white" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+				</div> -->
+				<div class="name">Какие данные получать автоматически</div>
+				<div id="apisettings">
+					<div class="settingitem">
+						<div class="select">
+							<p>Получить Steam API и SteamID</p>
+							<svg class="powersvg">
+								<use href="#powericon"></use>
+							</svg>
+						</div>
 					</div>
-					<div class="grid horizontal2">
-						<p class="grid articletext">Получить tm api</p>
-						<label class="switch">
-							<input type="checkbox" id="gettmapi" name="tmapi">
-							<span class="slider round"></span>
-						</label>
+					<div class="settingitem">
+						<div class="select">
+							<p>Получить TM Api</p>
+							<svg class="powersvg">
+								<use href="#powericon"></use>
+							</svg>
+						</div>
 					</div>
-					<div class="grid horizontal2">
-						<p class="grid articletext">Получить tradelink</p>
-						<label class="switch">
-							<input type="checkbox" id="gettradelink" name="tradelink">
-							<span class="slider round"></span>
-						</label>
+					<div class="settingitem">
+						<div class="select">
+							<p>Получить Tradelink</p>
+							<svg class="powersvg">
+								<use href="#powericon"></use>
+							</svg>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="grid horizontal2">
-				<p class="grid articletext">Создать онлайн на аккаунте (20 секунд показывает, что профиль в сети)</p>
-				<label class="switch">
-					<input type="checkbox" id="online">
-					<span class="slider round"></span>
-				</label>
-			</div>
-		</article>
-		<footer class="grid">
-			<div class="ott grid">steam api key: <input type="text" readonly id="steamapi"></div>
-			<div class="ott grid">tm api key: <input type="text" readonly id="tmapi"></div>
-			<div class="ott grid">steam id: <input type="text" readonly id="steamid"></div>
-			<div class="ott grid">treade link: <input type="text" readonly id="tradelink"></div>
-			<div class="grid"><textarea readonly id="errorlog" style="resize: none;"></textarea></div>
-		</footer>
-		<script src="js/library.js"></script>
-		<script src="js/settings.js"></script>
-	</body>
+		</div>
+	</article>
+</body>
 </html>
