@@ -1,5 +1,8 @@
+var steamid;
+
 function profileEdit()
 {
+	steamid = getSteamid();
 	storage.get(["profilearr"], res => {
 		res.profilearr.forEach(el => {
 			window[el]();
@@ -10,13 +13,13 @@ function profileEdit()
 async function End()
 {
 	storage.set({profileEdited: true}, () => {
-		if(jQuery(".btn_green_white_innerfade.btn_medium").length == 0)
+		if(jQuery(".DialogButton._DialogLayout.Primary").length == 0)
 		{
 			chrome.runtime.sendMessage({action: "error", type: "profilesave"});
 			return;
 		}
 		
-		jQuery(".btn_green_white_innerfade.btn_medium").click();
+		jQuery(".DialogButton._DialogLayout.Primary").click();
 	});
 }
 
@@ -25,7 +28,7 @@ async function Background()
 	let sessionid = getSessionid();
 	jQuery.ajax({
 		method: "POST",
-		url: "https://steamcommunity.com/id/me/ajaxgetplayerbackgrounds",
+		url: "https://steamcommunity.com/profiles/"+steamid+"/ajaxgetplayerbackgrounds",
 		data:
 		{
 			sessionid: sessionid
@@ -64,22 +67,22 @@ async function SetupCommunityRealName()
 	});
 }
 
-async function FeatureBadgeOnProfile()
-{
-	try
-	{
-		jQuery(".btn_grey_white_innerfade.btn_small").eq(2).click();
-		jQuery(".group_list_option").eq(1).click();
-	}
-	catch(e)
-	{
-		chrome.runtime.sendMessage({action: "error", type: "badge"});
-	}
-}
+// async function FeatureBadgeOnProfile()
+// {
+// 	try
+// 	{
+// 		jQuery(".btn_grey_white_innerfade.btn_small").eq(2).click();
+// 		jQuery(".group_list_option").eq(1).click();
+// 	}
+// 	catch(e)
+// 	{
+// 		chrome.runtime.sendMessage({action: "error", type: "badge"});
+// 	}
+// }
 
 async function AddSummary()
 {
-	if(jQuery('#summary').length == 0)
+	if(jQuery('textarea[name=summary]').length == 0)
 	{
 		chrome.runtime.sendMessage({action: "error", type: "summary"});
 		return;
@@ -90,27 +93,27 @@ async function AddSummary()
 			summary = res.customsettings.info;
 		else summary = topWords[Math.round(Math.random() * (topWords.length - 1))];
 
-		jQuery('#summary').val(summary);
+		jQuery('textarea[name=summary]').val(summary);
 	});
 }
 
-async function MainGroup()
-{
-	jQuery.ajax({
-		url: "https://steamcommunity.com/id/me/ajaxgroupinvite?select_primary=1"
-	}).done(function(data) {
-		var html = jQuery.parseHTML(data);
-		var groupid = jQuery(html).find('.group_list_option:first').data('groupid');
-		if(!groupid)
-		{
-			chrome.runtime.sendMessage({action: "error", type: "nogroupid"});
-		}
-		jQuery('#primary_group_steamid').val(groupid);
-		End();
-	}).fail((jqXHR, textStatus, errorThrown) => {
-		chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "установки главной группы", textStatus: textStatus, errorThrown: errorThrown, stop: false});
-	});
-}
+// async function MainGroup()
+// {
+// 	jQuery.ajax({
+// 		url: "https://steamcommunity.com/profiles/"+steamid+"/ajaxgroupinvite?select_primary=1"
+// 	}).done(function(data) {
+// 		var html = jQuery.parseHTML(data);
+// 		var groupid = jQuery(html).find('.group_list_option:first').data('groupid');
+// 		if(!groupid)
+// 		{
+// 			chrome.runtime.sendMessage({action: "error", type: "nogroupid"});
+// 		}
+// 		jQuery('#primary_group_steamid').val(groupid);
+// 		End();
+// 	}).fail((jqXHR, textStatus, errorThrown) => {
+// 		chrome.runtime.sendMessage({action: "error", type: "ajax", stage: "установки главной группы", textStatus: textStatus, errorThrown: errorThrown, stop: false});
+// 	});
+// }
 
 function start()
 {

@@ -104,6 +104,10 @@
 	{
 		"matches": ["https://steamcommunity.com/id/*/gamecards/730/", "https://steamcommunity.com/profiles/*/gamecards/730/"],
 		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/levelup.js"]
+	},
+	{
+		"matches": ["https://store.steampowered.com/"],
+		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/getFreeLicenses.js"]
 	}
 ]
 }

@@ -1,8 +1,11 @@
 function chat()
 {
-	setTimeout(() => {
-		chrome.runtime.sendMessage({action: "queue"});
-	}, 20000);
+	var i = setInterval(() => {
+		if(document.getElementById('arrowBase')){
+			clearInterval(i);
+			chrome.runtime.sendMessage({action: "queue"});
+		}
+	}, 100);
 }
 
 function start()

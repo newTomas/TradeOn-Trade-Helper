@@ -212,7 +212,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 		case "bages":
 			// Вырезано: UseDiscoveryQueue
 			let needs = ["ViewBroadcast", "SubscribeToWorkshopItem", "RateUpContentInActivityFeed", "AddItemToWishlist", "JoinGroup", "SearchInDiscussions", "FeatureBadgeOnProfile"];
-			let arr = [];
+			let arr = ['getFreeLicenses'];
 			let profile = [];
 			let profilearr = ["AddSummary", "MainGroup", "SetupCommunityRealName"];
 			for(var el in req.bages)
@@ -220,12 +220,13 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 				//req.bages[el] = true;
 				if(needs.includes(el) && req.bages[el])
 				{
-					if(el == "FeatureBadgeOnProfile")
-						profilearr.push(el);
-					else arr.push(el);
+					// if(el == "FeatureBadgeOnProfile")
+					// 	profilearr.push(el);
+					// else arr.push(el);
+					arr.push(el);
 				}
 			}
-			//arr.push("SetupCommunityAvatar", "ProfileEdit", "Privacy");
+			arr.push("SetupCommunityAvatar", "ProfileEdit", "Privacy");
 			//arr.push("AddItemToWishlist");
 			storage.get(["stages", "mode"], res => {
 				arr.push('Chat');

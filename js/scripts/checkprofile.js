@@ -1,4 +1,4 @@
-function runCheck()
+async function runCheck()
 {
 	storage.set({current: null});
 	let steamid = getSteamid();
@@ -14,8 +14,10 @@ function runCheck()
 			return;
 		}
 		jQuery(html).find(".badge_detail_tasks").children().find('img').each((i, el) => {
-			var cur = el.src.substring(72, el.src.length - 8).split('_');
-			bages[cur[0]] = (cur[1] != 'on');
+			var cur = el.src.split('/');
+			var [type, status] = cur[cur.length - 1].split('_');
+			status = status.split('.')[0];
+			bages[type] = (status != 'on');
 		});
 		chrome.runtime.sendMessage({action: "bages", bages: bages});
 	}).fail((jqXHR, textStatus, errorThrown) => {
