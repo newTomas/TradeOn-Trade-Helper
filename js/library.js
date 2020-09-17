@@ -143,6 +143,17 @@ storage.get = async (keys, callback) => {
 	});
 }
 
+function getApiToken(){
+	jQuery("body").append("<script>jQuery('body').append(\"<p id='apitoken' style='display: none;'>\"+JSON.parse($J('#profile_edit_config').attr('data-profile-edit')).webapi_token+\"</p>\")</script>");
+	let apitoken = jQuery("#apitoken").text();
+	if(!apitoken)
+	{
+		chrome.runtime.sendMessage({action: "error", type: "noapitoken"});
+		throw "apitoken отсутствует!";
+	}
+	return apitoken;
+}
+
 function getSteamid()
 {
 	jQuery("body").append("<script>jQuery('body').append(\"<p id='steamid' style='display: none;'>\"+g_steamID+\"</p>\")</script>");
@@ -297,10 +308,10 @@ async function ProfileEdit()
 {
 	storage.set({current: "profileedit", profileEdited: false});
 	if(curtab)
-		chrome.tabs.update(curtab, {url: "https://steamcommunity.com/id/me/edit"}, tab => {
+		chrome.tabs.update(curtab, {url: "https://steamcommunity.com/id/me/edit/info"}, tab => {
 			curtab = tab.id;
 		});
-	else chrome.tabs.create({url: "https://steamcommunity.com/id/me/edit", active: false}, tab => {
+	else chrome.tabs.create({url: "https://steamcommunity.com/id/me/edit/info", active: false}, tab => {
 		curtab = tab.id;
 	});
 }

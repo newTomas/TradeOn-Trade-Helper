@@ -206,6 +206,12 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 				case "nosessionid":
 					errorhandler(`Не удалось получить sessionid, возможно вы не авторизованы!`, true);
 					break;
+				case "noapitoken":
+					errorhandler(`Не удалось получить apitoken, возможно вы не авторизованы!`, true);
+					break;
+				case "SetFavoriteBadge":
+					errorhandler(`Не удалось установить значок на показ`);
+					break;
 			}
 			queue();
 			break;

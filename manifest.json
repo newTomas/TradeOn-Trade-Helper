@@ -70,7 +70,7 @@
 		"js": ["js/jquery-3.4.1.min.js", "js/library.js", "js/scripts/groups.js"]
 	},
 	{
-		"matches": ["https://steamcommunity.com/id/*/edit", "https://steamcommunity.com/profiles/*/edit"],
+		"matches": ["https://steamcommunity.com/id/*/edit/info", "https://steamcommunity.com/profiles/*/edit/info"],
 		"js": ["js/jquery-3.4.1.min.js", "js/consts.js", "js/library.js", "js/scripts/profileedit.js"]
 	},
 	{
