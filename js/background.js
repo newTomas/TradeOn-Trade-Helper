@@ -8,7 +8,6 @@ chrome.runtime.onInstalled.addListener(function() {
 		steamid: null,
 		tradelink: null,
 		needAuth: false,
-		profileEdited: false,
 		stage: 0,
 		lvlup: 1,
 		current: null,

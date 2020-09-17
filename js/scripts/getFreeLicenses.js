@@ -26,7 +26,8 @@ async function wait(ms){
 
 async function getFreeLicenses(){
   sessionId = getSessionid();
-  var count = Math.round(Math.random() * 10 + 5);
+	var count = Math.round(Math.random() * 10 + 4);
+	await getFreeLicense(303386); // cs go
 	for(var i = 0; i < count; i++){
     var cur = Math.round(Math.random() * (freePackages.length - 1));
     var el = freePackages.splice(cur, 1);
