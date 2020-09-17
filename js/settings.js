@@ -188,7 +188,7 @@ function start()
 	jQuery('#lvlup input').change(e => {
 		var num = parseInt(e.target.value);
 		storage.get('customsettings', res => {
-			if(num < 1 || num > 7)
+			if(num < 0 || num > 5)
 			{
 				e.target.value = res.customsettings.lvlup;
 			}

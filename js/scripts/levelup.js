@@ -85,7 +85,7 @@ function Level()
 		if(res.mode == 5)
 			level = res.customsettings.lvlup;
 		else level = res.lvlup;
-		console.log(`Buyng ${level - 2} sets`);
+		console.log(`Buyng ${level} sets`);
 		run();
 	});
 }
@@ -104,10 +104,10 @@ var needspacks;
 function run()
 {
 	let curlvl = parseInt(jQuery('.badge_info_description div').eq(1).text()) || 0;
-	if(curlvl < level - 2)
+	if(curlvl < level)
 	{
 		needs = {};
-		needspacks = level - 2 - curlvl;
+		needspacks = level - curlvl;
 		let arr = ['730-Anarchist', '730-Balkan', '730-FBI', '730-IDF', '730-SWAT'];
 		let cards = jQuery('.badge_card_set_card').find('.badge_card_set_text:first');
 		let first = true;

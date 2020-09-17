@@ -24,7 +24,7 @@ chrome.runtime.onInstalled.addListener(function() {
 			online: false
 		},
 		customsettings: {
-			lvlup: 1,
+			lvlup: 0,
 			steamapiid: true,
 			tmapi: true,
 			tradelink: true,
@@ -216,7 +216,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 			break;
 		case "bages":
 			// Вырезано: UseDiscoveryQueue
-			let needs = ["ViewBroadcast", "SubscribeToWorkshopItem", "RateUpContentInActivityFeed", "AddItemToWishlist", "JoinGroup", "SearchInDiscussions", "FeatureBadgeOnProfile"];
+			let needs = ["ViewBroadcast", "SubscribeToWorkshopItem", "RateUpContentInActivityFeed", "AddItemToWishlist", "JoinGroup", "SearchInDiscussions"];
 			let arr = ['getFreeLicenses'];
 			let profile = [];
 			let profilearr = ["AddSummary", "MainGroup", "SetupCommunityRealName"];
@@ -258,7 +258,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 								stages.push('getTradeLink');
 							if(res.customsettings.tmapi)
 								stages.push('marketAuth');
-							if(res.customsettings.lvlup > 1)
+							if(res.customsettings.lvlup >= 1)
 								stages.push('Level');
 							storage.set({stages: stages});
 							checkprofile();
@@ -274,10 +274,10 @@ chrome.runtime.onMessage.addListener((req, sender, sendRes) => {
 						{
 							if(req.mode < 2)
 							{
-								storage.set({lvlup: 7});
+								storage.set({lvlup: 5});
 								stages.push('Level');
 							}
-							else storage.set({lvlup: 1});
+							else storage.set({lvlup: 0});
 							storage.set({stages: stages});
 							checkprofile();
 						} else

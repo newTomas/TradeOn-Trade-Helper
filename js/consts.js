@@ -48,8 +48,7 @@ function checkGroup(url)
 }
 
 jQuery.ajax({
-	url: "https://steamladder.com/ladder/groups/",
-	async: false
+	url: "https://steamladder.com/ladder/groups/"
 }).done(function( data ) {
 	html = jQuery.parseHTML(data);
 	var res = jQuery(html).find('.group_name a');
