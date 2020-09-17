@@ -34,6 +34,9 @@ function checkGroup(url)
 		url: url,
 		xhrFields:{
 			withCredentials: true
+		},
+		headers: {
+			'Accept-Language': 'en-US'
 		}
 	}).done((data, textStatus, jqXHR) => {
 		data = jQuery.parseHTML(data);
